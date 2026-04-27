@@ -19,6 +19,7 @@ export const chancellorDefinition: PieceDefinition = {
 	count: 2,
 	royal: false,
 	jumper: true,
+	toggleable: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		const rookMoves = getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS);
 		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);

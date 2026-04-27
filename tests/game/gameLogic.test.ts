@@ -31,7 +31,7 @@ describe('createInitialGameState', () => {
 	test('creates valid initial state', () => {
 		const state = createInitialGameState({
 			boardSize: 8,
-			enabledExtraPieces: new Set(),
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
 		});
@@ -253,7 +253,7 @@ describe('selectSquare', () => {
 	test('selecting own piece shows valid moves', () => {
 		const state = createInitialGameState({
 			boardSize: 8,
-			enabledExtraPieces: new Set(),
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
 		});
@@ -265,7 +265,7 @@ describe('selectSquare', () => {
 	test('selecting empty square with no selection does nothing', () => {
 		const state = createInitialGameState({
 			boardSize: 8,
-			enabledExtraPieces: new Set(),
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
 		});
@@ -276,7 +276,7 @@ describe('selectSquare', () => {
 	test('selecting opponent piece does nothing', () => {
 		const state = createInitialGameState({
 			boardSize: 8,
-			enabledExtraPieces: new Set(),
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
 		});
@@ -287,7 +287,7 @@ describe('selectSquare', () => {
 	test('clicking selected piece again deselects it', () => {
 		const state = createInitialGameState({
 			boardSize: 8,
-			enabledExtraPieces: new Set(),
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
 		});
@@ -301,7 +301,7 @@ describe('selectSquare', () => {
 	test('executing a valid move changes turn', () => {
 		const state = createInitialGameState({
 			boardSize: 8,
-			enabledExtraPieces: new Set(),
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
 		});

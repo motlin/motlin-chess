@@ -19,6 +19,7 @@ export const knightDefinition: PieceDefinition = {
 	count: 2,
 	royal: false,
 	jumper: true,
+	toggleable: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);
 	},

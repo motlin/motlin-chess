@@ -1,7 +1,7 @@
 import type {GameSettings} from '../types.js';
-import {getExtraPieceTypes, getPieceDefinition} from '../pieces/registry.js';
+import {getPieceDefinition, getToggleablePieceTypes} from '../pieces/registry.js';
 import {BOARD_THEMES, PIECE_SETS, getPieceImagePath} from '../themes.js';
-import {buildBackRank} from '../game/boardSetup.js';
+import {backRankFitsBoard, buildBackRank} from '../game/boardSetup.js';
 import './SettingsPanel.css';
 
 interface SettingsPanelProps {
@@ -11,8 +11,9 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPanelProps): React.JSX.Element {
-	const extraPieceTypes = getExtraPieceTypes();
-	const backRank = buildBackRank(settings.boardSize, settings.enabledExtraPieces);
+	const toggleablePieces = getToggleablePieceTypes();
+	const backRank = buildBackRank(settings.enabledPieces);
+	const fits = backRankFitsBoard(settings.enabledPieces, settings.boardSize);
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		const size = Number(event.target.value) * 2;
@@ -21,14 +22,14 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 		}
 	}
 
-	function handleExtraPieceToggle(pieceType: string): void {
-		const next = new Set(settings.enabledExtraPieces);
+	function handlePieceToggle(pieceType: string): void {
+		const next = new Set(settings.enabledPieces);
 		if (next.has(pieceType)) {
 			next.delete(pieceType);
 		} else {
 			next.add(pieceType);
 		}
-		onSettingsChange({enabledExtraPieces: next});
+		onSettingsChange({enabledPieces: next});
 	}
 
 	return (
@@ -87,35 +88,32 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 			</div>
 
 			<div className="setting-group">
-				<h3 className="setting-label">Extra Pieces</h3>
-				{extraPieceTypes.length === 0 ? (
-					<p className="no-extra-pieces">No extra pieces available</p>
-				) : (
-					<div className="extra-pieces-list">
-						{extraPieceTypes.map((type) => {
-							const def = getPieceDefinition(type);
-							return (
-								<label key={type} className="extra-piece-toggle">
-									<input
-										type="checkbox"
-										checked={settings.enabledExtraPieces.has(type)}
-										onChange={() => handleExtraPieceToggle(type)}
-									/>
-									<img
-										src={getPieceImagePath(settings.pieceSet, 'white', type)}
-										alt={def?.name ?? type}
-										className="extra-piece-icon"
-									/>
-									<span>{def?.name ?? type}</span>
-								</label>
-							);
-						})}
-					</div>
-				)}
+				<h3 className="setting-label">Pieces</h3>
+				<div className="pieces-list">
+					{toggleablePieces.map((type) => {
+						const def = getPieceDefinition(type);
+						return (
+							<label key={type} className="piece-toggle">
+								<input
+									type="checkbox"
+									checked={settings.enabledPieces.has(type)}
+									onChange={() => handlePieceToggle(type)}
+								/>
+								<img
+									src={getPieceImagePath(settings.pieceSet, 'white', type)}
+									alt={def?.name ?? type}
+									className="piece-toggle-icon"
+								/>
+								<span>{def?.name ?? type}</span>
+								{def !== undefined && !def.isStandard && <span className="piece-badge">extra</span>}
+							</label>
+						);
+					})}
+				</div>
 			</div>
 
 			<div className="setting-group">
-				<span className="setting-label">Back Rank Layout</span>
+				<span className="setting-label">Back Rank Layout ({backRank.length} pieces)</span>
 				<div className="back-rank-preview">
 					{backRank.map((type, i) => (
 						<img
@@ -127,9 +125,15 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 						/>
 					))}
 				</div>
+				{!fits && (
+					<p className="validation-error">
+						Back rank needs {backRank.length} columns but board is only {settings.boardSize} wide. Increase
+						board size or disable pieces.
+					</p>
+				)}
 			</div>
 
-			<button type="button" className="reset-button" onClick={onReset}>
+			<button type="button" className="reset-button" onClick={onReset} disabled={!fits}>
 				New Game
 			</button>
 		</div>

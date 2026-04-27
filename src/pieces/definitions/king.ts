@@ -10,6 +10,7 @@ export const kingDefinition: PieceDefinition = {
 	count: 1,
 	royal: true,
 	jumper: false,
+	toggleable: false,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getStepMoves(position, board, color, boardSize, KING_OFFSETS);
 	},

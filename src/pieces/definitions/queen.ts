@@ -8,6 +8,7 @@ export const queenDefinition: PieceDefinition = {
 	count: 1,
 	royal: false,
 	jumper: false,
+	toggleable: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getSlidingMoves(position, board, color, boardSize, ALL_DIRECTIONS);
 	},

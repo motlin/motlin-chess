@@ -1,6 +1,11 @@
 import {describe, expect, test} from 'vite-plus/test';
 import {buildBackRank, createInitialBoard, getStandardOffset} from '../../src/game/boardSetup.js';
 
+const STD = new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']);
+function withPieces(...extras: string[]): ReadonlySet<string> {
+	return new Set([...STD, ...extras]);
+}
+
 describe('getStandardOffset', () => {
 	test('offset is 0 for 8x8 board', () => {
 		expect(getStandardOffset(8)).toBe(0);
@@ -17,7 +22,7 @@ describe('getStandardOffset', () => {
 
 describe('createInitialBoard', () => {
 	test('8x8 board has correct dimensions', () => {
-		const board = createInitialBoard(8, new Set());
+		const board = createInitialBoard(8, STD);
 		expect(board.length).toBe(8);
 		for (const row of board) {
 			expect(row.length).toBe(8);
@@ -25,7 +30,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('8x8 board has correct back rank pieces', () => {
-		const board = createInitialBoard(8, new Set());
+		const board = createInitialBoard(8, STD);
 
 		expect(board[0]![0]).toStrictEqual({type: 'rook', color: 'black', hasMoved: false});
 		expect(board[0]![1]).toStrictEqual({type: 'knight', color: 'black', hasMoved: false});
@@ -41,7 +46,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('8x8 board has pawns on rows 1 and 6', () => {
-		const board = createInitialBoard(8, new Set());
+		const board = createInitialBoard(8, STD);
 		for (let col = 0; col < 8; col++) {
 			expect(board[1]![col]).toStrictEqual({type: 'pawn', color: 'black', hasMoved: false});
 			expect(board[6]![col]).toStrictEqual({type: 'pawn', color: 'white', hasMoved: false});
@@ -49,7 +54,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('8x8 board has empty middle rows', () => {
-		const board = createInitialBoard(8, new Set());
+		const board = createInitialBoard(8, STD);
 		for (let row = 2; row <= 5; row++) {
 			for (let col = 0; col < 8; col++) {
 				expect(board[row]![col]).toBeNull();
@@ -58,7 +63,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('10x10 board centers standard pieces', () => {
-		const board = createInitialBoard(10, new Set());
+		const board = createInitialBoard(10, STD);
 		expect(board.length).toBe(10);
 
 		expect(board[0]![0]).toBeNull();
@@ -74,7 +79,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('12x12 board has correct layout', () => {
-		const board = createInitialBoard(12, new Set());
+		const board = createInitialBoard(12, STD);
 		expect(board.length).toBe(12);
 
 		expect(board[0]![0]).toBeNull();
@@ -87,7 +92,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('4x4 board has king and truncated pieces', () => {
-		const board = createInitialBoard(4, new Set());
+		const board = createInitialBoard(4, STD);
 		expect(board.length).toBe(4);
 		for (const row of board) {
 			expect(row.length).toBe(4);
@@ -103,7 +108,7 @@ describe('createInitialBoard', () => {
 	});
 
 	test('5x5 board has king and up to 5 back rank pieces', () => {
-		const board = createInitialBoard(5, new Set());
+		const board = createInitialBoard(5, STD);
 		expect(board.length).toBe(5);
 
 		const blackBackRank = [0, 1, 2, 3, 4].map((col) => board[0]![col]);
@@ -115,12 +120,12 @@ describe('createInitialBoard', () => {
 
 describe('buildBackRank', () => {
 	test('standard 8-piece back rank', () => {
-		const rank = buildBackRank(8, new Set());
+		const rank = buildBackRank(STD);
 		expect(rank).toStrictEqual(['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook']);
 	});
 
 	test('archbishop adds two pieces symmetrically', () => {
-		const rank = buildBackRank(10, new Set(['archbishop']));
+		const rank = buildBackRank(withPieces('archbishop'));
 		expect(rank).toStrictEqual([
 			'rook',
 			'knight',
@@ -136,7 +141,7 @@ describe('buildBackRank', () => {
 	});
 
 	test('chancellor adds two pieces symmetrically', () => {
-		const rank = buildBackRank(10, new Set(['chancellor']));
+		const rank = buildBackRank(withPieces('chancellor'));
 		expect(rank).toStrictEqual([
 			'rook',
 			'chancellor',
@@ -151,8 +156,8 @@ describe('buildBackRank', () => {
 		]);
 	});
 
-	test('all extra pieces on 12x12', () => {
-		const rank = buildBackRank(12, new Set(['archbishop', 'chancellor', 'centaur']));
+	test('all extra pieces', () => {
+		const rank = buildBackRank(withPieces('archbishop', 'chancellor', 'centaur'));
 		expect(rank).toStrictEqual([
 			'rook',
 			'chancellor',
@@ -170,13 +175,21 @@ describe('buildBackRank', () => {
 	});
 
 	test('centaur replaces king', () => {
-		const rank = buildBackRank(8, new Set(['centaur']));
+		const rank = buildBackRank(withPieces('centaur'));
 		expect(rank).toStrictEqual(['rook', 'knight', 'bishop', 'queen', 'centaur', 'bishop', 'knight', 'rook']);
 	});
 
-	test('extra pieces truncated when board too small', () => {
-		const rank = buildBackRank(8, new Set(['archbishop', 'chancellor']));
-		expect(rank.length).toBe(8);
-		expect(rank).toContain('king');
+	test('disabling rooks removes them', () => {
+		const pieces = new Set(['king', 'queen', 'bishop', 'knight', 'pawn']);
+		const rank = buildBackRank(pieces);
+		expect(rank).not.toContain('rook');
+		expect(rank).toStrictEqual(['knight', 'bishop', 'queen', 'king', 'bishop', 'knight']);
+	});
+
+	test('disabling bishops removes them', () => {
+		const pieces = new Set(['king', 'queen', 'rook', 'knight', 'pawn']);
+		const rank = buildBackRank(pieces);
+		expect(rank).not.toContain('bishop');
+		expect(rank).toStrictEqual(['rook', 'knight', 'queen', 'king', 'knight', 'rook']);
 	});
 });

@@ -42,7 +42,7 @@ export type Board = ReadonlyArray<ReadonlyArray<Piece | null>>;
 
 export interface GameSettings {
 	readonly boardSize: number;
-	readonly enabledExtraPieces: ReadonlySet<string>;
+	readonly enabledPieces: ReadonlySet<string>;
 	readonly pieceSet: string;
 	readonly boardTheme: string;
 }

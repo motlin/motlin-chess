@@ -16,7 +16,7 @@ const GameContext = createContext<GameContextValue | null>(null);
 
 const DEFAULT_SETTINGS: GameSettings = {
 	boardSize: 8,
-	enabledExtraPieces: new Set<string>(),
+	enabledPieces: new Set<string>(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 	pieceSet: DEFAULT_PIECE_SET,
 	boardTheme: DEFAULT_BOARD_THEME,
 };
@@ -36,7 +36,7 @@ export function GameProvider({children}: {readonly children: React.ReactNode}): 
 	const updateSettings = useCallback((update: Partial<GameSettings>) => {
 		setSettings((prev) => {
 			const next = {...prev, ...update};
-			if (update.boardSize !== undefined || update.enabledExtraPieces !== undefined) {
+			if (update.boardSize !== undefined || update.enabledPieces !== undefined) {
 				setGameState(createInitialGameState(next));
 			}
 			return next;
