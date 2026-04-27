@@ -19,6 +19,7 @@ export const archbishopDefinition: PieceDefinition = {
 	count: 2,
 	royal: false,
 	jumper: true,
+	toggleable: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		const bishopMoves = getSlidingMoves(position, board, color, boardSize, DIAGONAL_DIRECTIONS);
 		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);

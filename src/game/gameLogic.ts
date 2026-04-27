@@ -4,7 +4,7 @@ import {createInitialBoard, getStandardOffset} from './boardSetup.js';
 
 export function createInitialGameState(settings: GameSettings): GameState {
 	return {
-		board: createInitialBoard(settings.boardSize, settings.enabledExtraPieces),
+		board: createInitialBoard(settings.boardSize, settings.enabledPieces),
 		currentTurn: 'white',
 		selectedPosition: null,
 		validMoves: [],

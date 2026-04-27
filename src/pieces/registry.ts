@@ -34,6 +34,10 @@ export function getExtraPieceTypes(): PieceType[] {
 	return [...pieceRegistry.entries()].filter(([_, def]) => !def.isStandard).map(([type]) => type);
 }
 
+export function getToggleablePieceTypes(): PieceType[] {
+	return [...pieceRegistry.entries()].filter(([_, def]) => def.toggleable).map(([type]) => type);
+}
+
 export function getAllPieceDefinitions(): ReadonlyMap<PieceType, PieceDefinition> {
 	return pieceRegistry;
 }

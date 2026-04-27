@@ -56,5 +56,6 @@ export const pawnDefinition: PieceDefinition = {
 	count: 2,
 	royal: false,
 	jumper: false,
+	toggleable: false,
 	getValidMoves: getPawnMoves,
 };

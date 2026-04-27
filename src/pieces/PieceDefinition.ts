@@ -7,6 +7,7 @@ export interface PieceDefinition {
 	readonly count: 1 | 2;
 	readonly royal: boolean;
 	readonly jumper: boolean;
+	readonly toggleable: boolean;
 	getValidMoves(
 		position: Position,
 		board: Board,
