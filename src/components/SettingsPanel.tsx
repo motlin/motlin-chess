@@ -12,7 +12,7 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPanelProps): React.JSX.Element {
 	const toggleablePieces = getToggleablePieceTypes();
-	const backRank = buildBackRank(settings.enabledPieces);
+	const backRank = buildBackRank(settings.enabledPieces, settings.boardSize);
 	const fits = backRankFitsBoard(settings.enabledPieces, settings.boardSize);
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
