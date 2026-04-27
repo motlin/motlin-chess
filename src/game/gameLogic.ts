@@ -308,6 +308,10 @@ export function selectSquare(state: GameState, position: Position): GameState {
 	const clickedPiece = state.board[position.row]?.[position.col] ?? null;
 
 	if (state.selectedPosition !== null) {
+		if (state.selectedPosition.row === position.row && state.selectedPosition.col === position.col) {
+			return {...state, selectedPosition: null, validMoves: []};
+		}
+
 		const selectedMove = state.validMoves.find((m) => m.to.row === position.row && m.to.col === position.col);
 
 		if (selectedMove !== undefined) {
