@@ -37,11 +37,16 @@ export function Board({
 		fileLabels.push(String.fromCharCode(97 + col));
 	}
 
+	const maxSquarePx = 72;
+	const maxBoardPx = boardSize * maxSquarePx;
+	const dimension = `min(80vw, 80vh, ${maxBoardPx}px)`;
+
 	const themeVars = {
 		'--board-light': boardTheme.lightSquare,
 		'--board-dark': boardTheme.darkSquare,
 		'--board-light-texture': boardTheme.textured && boardTheme.lightTexture ? boardTheme.lightTexture : 'none',
 		'--board-dark-texture': boardTheme.textured && boardTheme.darkTexture ? boardTheme.darkTexture : 'none',
+		'--board-dimension': dimension,
 		gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
 	} as React.CSSProperties;
 
@@ -75,7 +80,7 @@ export function Board({
 					}),
 				)}
 			</div>
-			<div className="file-labels" style={{gridTemplateColumns: `repeat(${boardSize}, 1fr)`}}>
+			<div className="file-labels" style={{gridTemplateColumns: `repeat(${boardSize}, 1fr)`, width: dimension}}>
 				{fileLabels.map((label) => (
 					<span key={label} className="file-label">
 						{label}

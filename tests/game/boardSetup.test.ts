@@ -85,4 +85,30 @@ describe('createInitialBoard', () => {
 		expect(board[0]![10]).toBeNull();
 		expect(board[0]![11]).toBeNull();
 	});
+
+	test('4x4 board has king and truncated pieces', () => {
+		const board = createInitialBoard(4, new Set());
+		expect(board.length).toBe(4);
+		for (const row of board) {
+			expect(row.length).toBe(4);
+		}
+
+		const backRankTypes = [0, 1, 2, 3].map((col) => board[0]![col]?.type);
+		expect(backRankTypes).toContain('king');
+
+		for (let col = 0; col < 4; col++) {
+			expect(board[1]![col]?.type).toBe('pawn');
+			expect(board[2]![col]?.type).toBe('pawn');
+		}
+	});
+
+	test('5x5 board has king and up to 5 back rank pieces', () => {
+		const board = createInitialBoard(5, new Set());
+		expect(board.length).toBe(5);
+
+		const blackBackRank = [0, 1, 2, 3, 4].map((col) => board[0]![col]);
+		const pieceTypes = blackBackRank.filter((p): p is NonNullable<typeof p> => p != null).map((p) => p.type);
+		expect(pieceTypes).toContain('king');
+		expect(pieceTypes.length).toBe(5);
+	});
 });
