@@ -41,13 +41,33 @@ function getBackRankForSize(boardSize: number): readonly PieceType[] {
 	return pieces;
 }
 
-export function createInitialBoard(boardSize: number, _enabledExtraPieces: ReadonlySet<string>): Board {
+function buildBackRank(boardSize: number, enabledExtraPieces: ReadonlySet<string>): readonly PieceType[] {
+	const base = [...getBackRankForSize(boardSize)];
+
+	if (enabledExtraPieces.has('archbishop') && base.length + 2 <= boardSize) {
+		const leftKnight = base.indexOf('knight');
+		const leftBishop = base.indexOf('bishop');
+		if (leftKnight !== -1 && leftBishop !== -1 && leftBishop === leftKnight + 1) {
+			base.splice(leftBishop, 0, 'archbishop');
+		}
+
+		const rightKnight = base.lastIndexOf('knight');
+		const rightBishop = base.lastIndexOf('bishop');
+		if (rightKnight !== -1 && rightBishop !== -1 && rightBishop === rightKnight - 1) {
+			base.splice(rightBishop + 1, 0, 'archbishop');
+		}
+	}
+
+	return base;
+}
+
+export function createInitialBoard(boardSize: number, enabledExtraPieces: ReadonlySet<string>): Board {
 	const board: (Piece | null)[][] = Array.from({length: boardSize}, () =>
 		Array.from<Piece | null>({length: boardSize}).fill(null),
 	);
 
-	const backRank = getBackRankForSize(boardSize);
-	const offset = getStandardOffset(boardSize);
+	const backRank = buildBackRank(boardSize, enabledExtraPieces);
+	const offset = Math.floor((boardSize - backRank.length) / 2);
 
 	for (let i = 0; i < backRank.length; i++) {
 		const pieceType = backRank[i];
@@ -55,7 +75,7 @@ export function createInitialBoard(boardSize: number, _enabledExtraPieces: Reado
 			continue;
 		}
 		const col = offset + i;
-		if (col < boardSize) {
+		if (col >= 0 && col < boardSize) {
 			board[0]![col] = createPiece(pieceType, 'black');
 			board[boardSize - 1]![col] = createPiece(pieceType, 'white');
 		}
