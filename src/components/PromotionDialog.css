@@ -1,0 +1,55 @@
+.promotion-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100;
+}
+
+.promotion-dialog {
+	background-color: var(--bg-panel);
+	border-radius: 12px;
+	padding: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.promotion-title {
+	margin: 0;
+	font-size: 1rem;
+	color: var(--text-primary);
+}
+
+.promotion-options {
+	display: flex;
+	gap: 0.75rem;
+}
+
+.promotion-option {
+	width: 64px;
+	height: 64px;
+	font-size: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid var(--board-border);
+	border-radius: 8px;
+	background-color: var(--board-light);
+	cursor: pointer;
+	transition:
+		background-color 0.15s,
+		transform 0.1s;
+}
+
+.promotion-option:hover {
+	background-color: var(--square-selected);
+	transform: scale(1.1);
+}

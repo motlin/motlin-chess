@@ -1,0 +1,57 @@
+import type {Board, Color, Position} from '../../types.js';
+import type {PieceDefinition} from '../PieceDefinition.js';
+import {isInBounds} from '../moveHelpers.js';
+
+function getPawnMoves(
+	position: Position,
+	board: Board,
+	color: Color,
+	boardSize: number,
+	enPassantTarget: Position | null,
+): Position[] {
+	const moves: Position[] = [];
+	const direction = color === 'white' ? -1 : 1;
+	const startRow = color === 'white' ? boardSize - 2 : 1;
+
+	const oneAhead = position.row + direction;
+	if (isInBounds(oneAhead, position.col, boardSize)) {
+		const targetSquare = board[oneAhead]?.[position.col];
+		if (targetSquare === null) {
+			moves.push({row: oneAhead, col: position.col});
+
+			if (position.row === startRow) {
+				const twoAhead = position.row + direction * 2;
+				if (isInBounds(twoAhead, position.col, boardSize)) {
+					const twoAheadSquare = board[twoAhead]?.[position.col];
+					if (twoAheadSquare === null) {
+						moves.push({row: twoAhead, col: position.col});
+					}
+				}
+			}
+		}
+	}
+
+	for (const dCol of [-1, 1]) {
+		const captureCol = position.col + dCol;
+		if (!isInBounds(oneAhead, captureCol, boardSize)) {
+			continue;
+		}
+		const captureTarget = board[oneAhead]?.[captureCol];
+		if (captureTarget !== null && captureTarget !== undefined && captureTarget.color !== color) {
+			moves.push({row: oneAhead, col: captureCol});
+		}
+
+		if (enPassantTarget !== null && enPassantTarget.row === oneAhead && enPassantTarget.col === captureCol) {
+			moves.push({row: oneAhead, col: captureCol});
+		}
+	}
+
+	return moves;
+}
+
+export const pawnDefinition: PieceDefinition = {
+	name: 'Pawn',
+	symbols: {white: '♙', black: '♟'},
+	isStandard: true,
+	getValidMoves: getPawnMoves,
+};

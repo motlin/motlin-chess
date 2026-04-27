@@ -1,0 +1,29 @@
+.game-info {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+	color: var(--text-primary);
+}
+
+.status {
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+.status-check {
+	color: var(--status-check);
+}
+
+.status-checkmate {
+	color: var(--status-checkmate);
+}
+
+.status-stalemate {
+	color: var(--status-stalemate);
+}
+
+.move-count {
+	font-size: 0.875rem;
+	color: var(--text-muted);
+}

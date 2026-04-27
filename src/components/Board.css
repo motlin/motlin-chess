@@ -1,0 +1,24 @@
+.board-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.board {
+	display: grid;
+	width: min(80vw, 80vh, 640px);
+	height: min(80vw, 80vh, 640px);
+	border: 2px solid var(--board-border);
+}
+
+.file-labels {
+	display: grid;
+	width: min(80vw, 80vh, 640px);
+}
+
+.file-label {
+	text-align: center;
+	font-size: 0.75rem;
+	color: var(--text-muted);
+	padding-top: 2px;
+}
