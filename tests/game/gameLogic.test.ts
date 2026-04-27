@@ -264,6 +264,15 @@ describe('selectSquare', () => {
 		expect(newState).toBe(state);
 	});
 
+	test('clicking selected piece again deselects it', () => {
+		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const selected = selectSquare(state, {row: 6, col: 4});
+		expect(selected.selectedPosition).toStrictEqual({row: 6, col: 4});
+		const deselected = selectSquare(selected, {row: 6, col: 4});
+		expect(deselected.selectedPosition).toBeNull();
+		expect(deselected.validMoves).toStrictEqual([]);
+	});
+
 	test('executing a valid move changes turn', () => {
 		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
 		const selected = selectSquare(state, {row: 6, col: 4});
