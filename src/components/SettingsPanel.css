@@ -32,6 +32,53 @@
 	accent-color: var(--accent);
 }
 
+.setting-select {
+	padding: 0.375rem 0.5rem;
+	border: 1px solid #555;
+	border-radius: 4px;
+	background-color: #3a3835;
+	color: var(--text-primary);
+	font-size: 0.8rem;
+}
+
+.piece-preview {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.piece-preview-img {
+	width: 28px;
+	height: 28px;
+}
+
+.theme-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+}
+
+.theme-swatch {
+	display: flex;
+	width: 36px;
+	height: 36px;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	overflow: hidden;
+	cursor: pointer;
+	padding: 0;
+	flex-wrap: wrap;
+}
+
+.theme-swatch-active {
+	border-color: var(--accent);
+}
+
+.swatch-light,
+.swatch-dark {
+	width: 50%;
+	height: 100%;
+}
+
 .no-extra-pieces {
 	margin: 0;
 	font-size: 0.8rem;

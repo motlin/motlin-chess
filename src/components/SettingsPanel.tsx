@@ -1,6 +1,6 @@
 import type {GameSettings} from '../types.js';
-import {getExtraPieceTypes} from '../pieces/registry.js';
-import {getPieceDefinition} from '../pieces/registry.js';
+import {getExtraPieceTypes, getPieceDefinition} from '../pieces/registry.js';
+import {BOARD_THEMES, PIECE_SETS, getPieceImagePath} from '../themes.js';
 import './SettingsPanel.css';
 
 interface SettingsPanelProps {
@@ -46,6 +46,52 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 					onChange={handleBoardSizeChange}
 					className="board-size-slider"
 				/>
+			</div>
+
+			<div className="setting-group">
+				<label className="setting-label" htmlFor="piece-set">
+					Piece Set
+				</label>
+				<select
+					id="piece-set"
+					className="setting-select"
+					value={settings.pieceSet}
+					onChange={(e) => onSettingsChange({pieceSet: e.target.value})}
+				>
+					{PIECE_SETS.map((set) => (
+						<option key={set.id} value={set.id}>
+							{set.name}
+						</option>
+					))}
+				</select>
+				<div className="piece-preview">
+					{['king', 'queen', 'rook', 'bishop', 'knight', 'pawn'].map((type) => (
+						<img
+							key={type}
+							src={getPieceImagePath(settings.pieceSet, 'white', type)}
+							alt={type}
+							className="piece-preview-img"
+						/>
+					))}
+				</div>
+			</div>
+
+			<div className="setting-group">
+				<span className="setting-label">Board Theme</span>
+				<div className="theme-grid">
+					{BOARD_THEMES.map((theme) => (
+						<button
+							key={theme.id}
+							type="button"
+							className={`theme-swatch ${settings.boardTheme === theme.id ? 'theme-swatch-active' : ''}`}
+							onClick={() => onSettingsChange({boardTheme: theme.id})}
+							title={theme.name}
+						>
+							<span className="swatch-light" style={{backgroundColor: theme.lightSquare}} />
+							<span className="swatch-dark" style={{backgroundColor: theme.darkSquare}} />
+						</button>
+					))}
+				</div>
 			</div>
 
 			<div className="setting-group">

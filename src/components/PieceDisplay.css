@@ -1,6 +1,7 @@
 .piece {
-	font-size: 1em;
-	line-height: 1;
+	width: 85%;
+	height: 85%;
 	user-select: none;
 	pointer-events: none;
+	object-fit: contain;
 }
