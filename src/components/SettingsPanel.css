@@ -101,6 +101,25 @@
 	cursor: pointer;
 }
 
+.extra-piece-icon {
+	width: 22px;
+	height: 22px;
+}
+
+.back-rank-preview {
+	display: flex;
+	gap: 2px;
+	padding: 0.375rem;
+	background-color: #3a3835;
+	border-radius: 4px;
+	flex-wrap: wrap;
+}
+
+.back-rank-piece {
+	width: 24px;
+	height: 24px;
+}
+
 .reset-button {
 	padding: 0.625rem 1rem;
 	border: none;

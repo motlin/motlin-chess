@@ -1,6 +1,7 @@
 import type {GameSettings} from '../types.js';
 import {getExtraPieceTypes, getPieceDefinition} from '../pieces/registry.js';
 import {BOARD_THEMES, PIECE_SETS, getPieceImagePath} from '../themes.js';
+import {buildBackRank} from '../game/boardSetup.js';
 import './SettingsPanel.css';
 
 interface SettingsPanelProps {
@@ -11,6 +12,7 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPanelProps): React.JSX.Element {
 	const extraPieceTypes = getExtraPieceTypes();
+	const backRank = buildBackRank(settings.boardSize, settings.enabledExtraPieces);
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		const size = Number(event.target.value);
@@ -64,16 +66,6 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 						</option>
 					))}
 				</select>
-				<div className="piece-preview">
-					{['king', 'queen', 'rook', 'bishop', 'knight', 'pawn'].map((type) => (
-						<img
-							key={type}
-							src={getPieceImagePath(settings.pieceSet, 'white', type)}
-							alt={type}
-							className="piece-preview-img"
-						/>
-					))}
-				</div>
 			</div>
 
 			<div className="setting-group">
@@ -109,12 +101,32 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 										checked={settings.enabledExtraPieces.has(type)}
 										onChange={() => handleExtraPieceToggle(type)}
 									/>
+									<img
+										src={getPieceImagePath(settings.pieceSet, 'white', type)}
+										alt={def?.name ?? type}
+										className="extra-piece-icon"
+									/>
 									<span>{def?.name ?? type}</span>
 								</label>
 							);
 						})}
 					</div>
 				)}
+			</div>
+
+			<div className="setting-group">
+				<span className="setting-label">Back Rank Layout</span>
+				<div className="back-rank-preview">
+					{backRank.map((type, i) => (
+						<img
+							key={`${type}-${i}`}
+							src={getPieceImagePath(settings.pieceSet, 'white', type)}
+							alt={type}
+							className="back-rank-piece"
+							title={getPieceDefinition(type)?.name ?? type}
+						/>
+					))}
+				</div>
 			</div>
 
 			<button type="button" className="reset-button" onClick={onReset}>

@@ -79,7 +79,12 @@ function findKing(board: Board, color: Color, boardSize: number): Position | nul
 	for (let row = 0; row < boardSize; row++) {
 		for (let col = 0; col < boardSize; col++) {
 			const piece = board[row]?.[col];
-			if (piece !== null && piece !== undefined && piece.type === 'king' && piece.color === color) {
+			if (
+				piece !== null &&
+				piece !== undefined &&
+				(piece.type === 'king' || piece.type === 'centaur') &&
+				piece.color === color
+			) {
 				return {row, col};
 			}
 		}
@@ -170,7 +175,12 @@ function getRawMovesForPiece(
 
 function getCastlingMoves(board: Board, position: Position, boardSize: number): Move[] {
 	const piece = board[position.row]?.[position.col];
-	if (piece === null || piece === undefined || piece.type !== 'king' || piece.hasMoved) {
+	if (
+		piece === null ||
+		piece === undefined ||
+		(piece.type !== 'king' && piece.type !== 'centaur') ||
+		piece.hasMoved
+	) {
 		return [];
 	}
 
@@ -240,7 +250,7 @@ export function getLegalMoves(
 
 	const rawMoves = getRawMovesForPiece(board, position, boardSize, enPassantTarget);
 
-	if (piece.type === 'king') {
+	if (piece.type === 'king' || piece.type === 'centaur') {
 		rawMoves.push(...getCastlingMoves(board, position, boardSize));
 	}
 
