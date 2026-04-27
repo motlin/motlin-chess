@@ -46,9 +46,7 @@ function buildFullBackRank(enabledPieces: ReadonlySet<string>): readonly PieceTy
 	return fullRank;
 }
 
-function findRoyalIndex(rank: PieceType[]): number {
-	return rank.findIndex((type) => getPieceDefinition(type)?.royal === true);
-}
+const REMOVAL_ORDER: readonly string[] = ['knight', 'chancellor', 'archbishop', 'queen', 'bishop', 'rook'];
 
 function trimToFit(rank: readonly PieceType[], boardSize: number): readonly PieceType[] {
 	if (rank.length <= boardSize) {
@@ -57,35 +55,20 @@ function trimToFit(rank: readonly PieceType[], boardSize: number): readonly Piec
 
 	const result = [...rank];
 
-	while (result.length > boardSize) {
-		const royalIdx = findRoyalIndex(result);
-		let removed = false;
-
-		for (let dist = 1; dist < result.length; dist++) {
-			const rightIdx = royalIdx + dist;
-			if (rightIdx < result.length) {
-				result.splice(rightIdx, 1);
-				removed = true;
-				break;
-			}
-		}
-
+	for (const pieceToRemove of REMOVAL_ORDER) {
 		if (result.length <= boardSize) {
 			break;
 		}
 
-		const newRoyalIdx = findRoyalIndex(result);
-		for (let dist = 1; dist < result.length; dist++) {
-			const leftIdx = newRoyalIdx - dist;
-			if (leftIdx >= 0) {
-				result.splice(leftIdx, 1);
-				removed = true;
-				break;
-			}
+		const isRoyal = getPieceDefinition(pieceToRemove)?.royal === true;
+		if (isRoyal) {
+			continue;
 		}
 
-		if (!removed) {
-			break;
+		let rightIdx = result.lastIndexOf(pieceToRemove);
+		while (rightIdx !== -1 && result.length > boardSize) {
+			result.splice(rightIdx, 1);
+			rightIdx = result.lastIndexOf(pieceToRemove);
 		}
 	}
 
@@ -98,10 +81,6 @@ export function buildBackRank(enabledPieces: ReadonlySet<string>, boardSize?: nu
 		return trimToFit(full, boardSize);
 	}
 	return full;
-}
-
-export function backRankFitsBoard(enabledPieces: ReadonlySet<string>, boardSize: number): boolean {
-	return buildFullBackRank(enabledPieces).length <= boardSize;
 }
 
 export function createInitialBoard(boardSize: number, enabledPieces: ReadonlySet<string>): Board {
