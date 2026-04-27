@@ -41,6 +41,31 @@ function getBackRankForSize(boardSize: number): readonly PieceType[] {
 	return pieces;
 }
 
+const EXTRA_PIECE_PLACEMENT: readonly PieceType[] = ['archbishop'];
+
+function placeExtraPieces(board: (Piece | null)[][], boardSize: number, enabledExtraPieces: ReadonlySet<string>): void {
+	const offset = getStandardOffset(boardSize);
+	const piecesToPlace = EXTRA_PIECE_PLACEMENT.filter((type) => enabledExtraPieces.has(type));
+
+	for (let i = 0; i < piecesToPlace.length; i++) {
+		const pieceType = piecesToPlace[i];
+		if (pieceType === undefined) {
+			continue;
+		}
+		const leftCol = offset - 1 - i;
+		const rightCol = offset + 8 + i;
+
+		if (leftCol >= 0) {
+			board[0]![leftCol] = createPiece(pieceType, 'black');
+			board[boardSize - 1]![leftCol] = createPiece(pieceType, 'white');
+		}
+		if (rightCol < boardSize) {
+			board[0]![rightCol] = createPiece(pieceType, 'black');
+			board[boardSize - 1]![rightCol] = createPiece(pieceType, 'white');
+		}
+	}
+}
+
 export function createInitialBoard(boardSize: number, _enabledExtraPieces: ReadonlySet<string>): Board {
 	const board: (Piece | null)[][] = Array.from({length: boardSize}, () =>
 		Array.from<Piece | null>({length: boardSize}).fill(null),
@@ -66,6 +91,10 @@ export function createInitialBoard(boardSize: number, _enabledExtraPieces: Reado
 			board[1]![col] = createPiece('pawn', 'black');
 			board[boardSize - 2]![col] = createPiece('pawn', 'white');
 		}
+	}
+
+	if (boardSize >= 10) {
+		placeExtraPieces(board, boardSize, _enabledExtraPieces);
 	}
 
 	return board;
