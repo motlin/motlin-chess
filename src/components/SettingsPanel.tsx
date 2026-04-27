@@ -14,7 +14,7 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		const size = Number(event.target.value);
-		if (size >= 8 && size <= 16) {
+		if (size >= 4 && size <= 16) {
 			onSettingsChange({boardSize: size});
 		}
 	}
@@ -40,7 +40,7 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 				<input
 					id="board-size"
 					type="range"
-					min={8}
+					min={4}
 					max={16}
 					value={settings.boardSize}
 					onChange={handleBoardSizeChange}
