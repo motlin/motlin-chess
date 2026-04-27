@@ -39,7 +39,7 @@ export function Board({
 
 	const maxSquarePx = 72;
 	const maxBoardPx = boardSize * maxSquarePx;
-	const dimension = `min(80vw, 80vh, ${maxBoardPx}px)`;
+	const dimension = `min(calc(100vw - 340px), calc(100vh - 220px), ${maxBoardPx}px)`;
 
 	const themeVars = {
 		'--board-light': boardTheme.lightSquare,
