@@ -163,6 +163,8 @@ export function getPieceImagePath(pieceSet: string, color: 'white' | 'black', pi
 		knight: 'N',
 		pawn: 'P',
 		archbishop: 'A',
+		chancellor: 'C',
+		centaur: 'U',
 	};
 	const typeSuffix = typeMap[pieceType] ?? pieceType.charAt(0).toUpperCase();
 	return `/pieces/${pieceSet}/${colorPrefix}${typeSuffix}.svg`;

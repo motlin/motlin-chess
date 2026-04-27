@@ -41,21 +41,47 @@ function getBackRankForSize(boardSize: number): readonly PieceType[] {
 	return pieces;
 }
 
-function buildBackRank(boardSize: number, enabledExtraPieces: ReadonlySet<string>): readonly PieceType[] {
+function insertBetween(
+	base: PieceType[],
+	pieceType: PieceType,
+	leftNeighbor: PieceType,
+	rightNeighbor: PieceType,
+	boardSize: number,
+): void {
+	if (base.length + 2 > boardSize) {
+		return;
+	}
+
+	const leftIdx = base.indexOf(leftNeighbor);
+	const rightIdx = leftIdx !== -1 ? base.indexOf(rightNeighbor, leftIdx + 1) : -1;
+	if (leftIdx !== -1 && rightIdx !== -1 && rightIdx === leftIdx + 1) {
+		base.splice(rightIdx, 0, pieceType);
+	}
+
+	const lastRight = base.lastIndexOf(rightNeighbor);
+	const lastLeft = lastRight !== -1 ? base.lastIndexOf(leftNeighbor, lastRight - 1) : -1;
+	if (lastRight !== -1 && lastLeft !== -1 && lastLeft === lastRight - 1) {
+		base.splice(lastRight, 0, pieceType);
+	}
+}
+
+export function buildBackRank(boardSize: number, enabledExtraPieces: ReadonlySet<string>): readonly PieceType[] {
 	const base = [...getBackRankForSize(boardSize)];
 
-	if (enabledExtraPieces.has('archbishop') && base.length + 2 <= boardSize) {
-		const leftKnight = base.indexOf('knight');
-		const leftBishop = base.indexOf('bishop');
-		if (leftKnight !== -1 && leftBishop !== -1 && leftBishop === leftKnight + 1) {
-			base.splice(leftBishop, 0, 'archbishop');
+	if (enabledExtraPieces.has('centaur')) {
+		for (let i = 0; i < base.length; i++) {
+			if (base[i] === 'king') {
+				base[i] = 'centaur';
+			}
 		}
+	}
 
-		const rightKnight = base.lastIndexOf('knight');
-		const rightBishop = base.lastIndexOf('bishop');
-		if (rightKnight !== -1 && rightBishop !== -1 && rightBishop === rightKnight - 1) {
-			base.splice(rightBishop + 1, 0, 'archbishop');
-		}
+	if (enabledExtraPieces.has('chancellor')) {
+		insertBetween(base, 'chancellor', 'rook', 'knight', boardSize);
+	}
+
+	if (enabledExtraPieces.has('archbishop')) {
+		insertBetween(base, 'archbishop', 'knight', 'bishop', boardSize);
 	}
 
 	return base;
