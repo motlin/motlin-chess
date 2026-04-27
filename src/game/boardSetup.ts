@@ -1,4 +1,5 @@
 import type {Board, Color, Piece, PieceType} from '../types.js';
+import {getPieceDefinition} from '../pieces/registry.js';
 
 function createPiece(type: PieceType, color: Color): Piece {
 	return {type, color, hasMoved: false};
@@ -11,7 +12,7 @@ export function getStandardOffset(boardSize: number): number {
 	return Math.floor((boardSize - 8) / 2);
 }
 
-export function buildBackRank(enabledPieces: ReadonlySet<string>): readonly PieceType[] {
+function buildFullBackRank(enabledPieces: ReadonlySet<string>): readonly PieceType[] {
 	const has = (type: string): boolean => enabledPieces.has(type);
 
 	const royalPiece: PieceType = has('centaur') ? 'centaur' : 'king';
@@ -45,8 +46,41 @@ export function buildBackRank(enabledPieces: ReadonlySet<string>): readonly Piec
 	return fullRank;
 }
 
-export function backRankFitsBoard(enabledPieces: ReadonlySet<string>, boardSize: number): boolean {
-	return buildBackRank(enabledPieces).length <= boardSize;
+const REMOVAL_ORDER: readonly string[] = ['knight', 'chancellor', 'archbishop', 'queen', 'bishop', 'rook'];
+
+function trimToFit(rank: readonly PieceType[], boardSize: number): readonly PieceType[] {
+	if (rank.length <= boardSize) {
+		return rank;
+	}
+
+	const result = [...rank];
+
+	for (const pieceToRemove of REMOVAL_ORDER) {
+		if (result.length <= boardSize) {
+			break;
+		}
+
+		const isRoyal = getPieceDefinition(pieceToRemove)?.royal === true;
+		if (isRoyal) {
+			continue;
+		}
+
+		let rightIdx = result.lastIndexOf(pieceToRemove);
+		while (rightIdx !== -1 && result.length > boardSize) {
+			result.splice(rightIdx, 1);
+			rightIdx = result.lastIndexOf(pieceToRemove);
+		}
+	}
+
+	return result;
+}
+
+export function buildBackRank(enabledPieces: ReadonlySet<string>, boardSize?: number): readonly PieceType[] {
+	const full = buildFullBackRank(enabledPieces);
+	if (boardSize !== undefined) {
+		return trimToFit(full, boardSize);
+	}
+	return full;
 }
 
 export function createInitialBoard(boardSize: number, enabledPieces: ReadonlySet<string>): Board {
@@ -54,7 +88,7 @@ export function createInitialBoard(boardSize: number, enabledPieces: ReadonlySet
 		Array.from<Piece | null>({length: boardSize}).fill(null),
 	);
 
-	const backRank = buildBackRank(enabledPieces);
+	const backRank = buildBackRank(enabledPieces, boardSize);
 	const offset = Math.floor((boardSize - backRank.length) / 2);
 
 	for (let i = 0; i < backRank.length; i++) {

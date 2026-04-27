@@ -1,7 +1,7 @@
 import type {GameSettings} from '../types.js';
 import {getPieceDefinition, getToggleablePieceTypes} from '../pieces/registry.js';
 import {BOARD_THEMES, PIECE_SETS, getPieceImagePath} from '../themes.js';
-import {backRankFitsBoard, buildBackRank} from '../game/boardSetup.js';
+import {buildBackRank} from '../game/boardSetup.js';
 import './SettingsPanel.css';
 
 interface SettingsPanelProps {
@@ -12,8 +12,7 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPanelProps): React.JSX.Element {
 	const toggleablePieces = getToggleablePieceTypes();
-	const backRank = buildBackRank(settings.enabledPieces);
-	const fits = backRankFitsBoard(settings.enabledPieces, settings.boardSize);
+	const backRank = buildBackRank(settings.enabledPieces, settings.boardSize);
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		const size = Number(event.target.value) * 2;
@@ -125,15 +124,9 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 						/>
 					))}
 				</div>
-				{!fits && (
-					<p className="validation-error">
-						Back rank needs {backRank.length} columns but board is only {settings.boardSize} wide. Increase
-						board size or disable pieces.
-					</p>
-				)}
 			</div>
 
-			<button type="button" className="reset-button" onClick={onReset} disabled={!fits}>
+			<button type="button" className="reset-button" onClick={onReset}>
 				New Game
 			</button>
 		</div>
