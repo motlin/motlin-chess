@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext, useState} from 'react';
 import type {GameSettings, GameState, PieceType, Position} from '../types.js';
 import {completePromotion, createInitialGameState, selectSquare} from '../game/gameLogic.js';
+import {DEFAULT_BOARD_THEME, DEFAULT_PIECE_SET} from '../themes.js';
 
 interface GameContextValue {
 	readonly gameState: GameState;
@@ -16,6 +17,8 @@ const GameContext = createContext<GameContextValue | null>(null);
 const DEFAULT_SETTINGS: GameSettings = {
 	boardSize: 8,
 	enabledExtraPieces: new Set<string>(),
+	pieceSet: DEFAULT_PIECE_SET,
+	boardTheme: DEFAULT_BOARD_THEME,
 };
 
 export function GameProvider({children}: {readonly children: React.ReactNode}): React.JSX.Element {
@@ -33,7 +36,9 @@ export function GameProvider({children}: {readonly children: React.ReactNode}): 
 	const updateSettings = useCallback((update: Partial<GameSettings>) => {
 		setSettings((prev) => {
 			const next = {...prev, ...update};
-			setGameState(createInitialGameState(next));
+			if (update.boardSize !== undefined || update.enabledExtraPieces !== undefined) {
+				setGameState(createInitialGameState(next));
+			}
 			return next;
 		});
 	}, []);

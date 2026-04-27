@@ -8,19 +8,33 @@
 	margin: 0;
 	cursor: pointer;
 	position: relative;
-	font-size: calc(min(80vw, 80vh, 640px) / var(--board-size, 8) * 0.75);
+	background-color: var(--sq-color);
+	background-image: var(--sq-texture, none);
 }
 
 .square-light {
-	background-color: var(--board-light);
+	--sq-color: var(--board-light);
+	--sq-texture: var(--board-light-texture, none);
 }
 
 .square-dark {
-	background-color: var(--board-dark);
+	--sq-color: var(--board-dark);
+	--sq-texture: var(--board-dark-texture, none);
 }
 
 .square-selected {
-	background-color: var(--square-selected) !important;
+	--sq-color: var(--square-selected) !important;
+	--sq-texture: none !important;
+}
+
+.square-last-move.square-light {
+	--sq-color: var(--square-last-move-light);
+	--sq-texture: none;
+}
+
+.square-last-move.square-dark {
+	--sq-color: var(--square-last-move-dark);
+	--sq-texture: none;
 }
 
 .square-valid-move {
@@ -38,14 +52,6 @@
 	border-radius: 50%;
 	background-color: var(--square-valid-move);
 	pointer-events: none;
-}
-
-.square-last-move.square-light {
-	background-color: var(--square-last-move-light);
-}
-
-.square-last-move.square-dark {
-	background-color: var(--square-last-move-dark);
 }
 
 .square:hover {

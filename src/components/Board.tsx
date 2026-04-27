@@ -1,4 +1,5 @@
 import type {Board as BoardType, Move, Position} from '../types.js';
+import type {BoardTheme} from '../themes.js';
 import {Square} from './Square.js';
 import './Board.css';
 
@@ -8,6 +9,8 @@ interface BoardProps {
 	readonly selectedPosition: Position | null;
 	readonly validMoves: readonly Move[];
 	readonly lastMove: Move | null;
+	readonly pieceSet: string;
+	readonly boardTheme: BoardTheme;
 	readonly onSquareClick: (position: Position) => void;
 }
 
@@ -17,6 +20,8 @@ export function Board({
 	selectedPosition,
 	validMoves,
 	lastMove,
+	pieceSet,
+	boardTheme,
 	onSquareClick,
 }: BoardProps): React.JSX.Element {
 	const validMoveSet = new Set(validMoves.map((m) => `${m.to.row},${m.to.col}`));
@@ -32,17 +37,17 @@ export function Board({
 		fileLabels.push(String.fromCharCode(97 + col));
 	}
 
+	const themeVars = {
+		'--board-light': boardTheme.lightSquare,
+		'--board-dark': boardTheme.darkSquare,
+		'--board-light-texture': boardTheme.textured && boardTheme.lightTexture ? boardTheme.lightTexture : 'none',
+		'--board-dark-texture': boardTheme.textured && boardTheme.darkTexture ? boardTheme.darkTexture : 'none',
+		gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
+	} as React.CSSProperties;
+
 	return (
 		<div className="board-container">
-			<div
-				className="board"
-				style={
-					{
-						gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
-						'--board-size': boardSize,
-					} as React.CSSProperties
-				}
-			>
+			<div className="board" style={themeVars}>
 				{Array.from({length: boardSize}, (_, row) =>
 					Array.from({length: boardSize}, (_, col) => {
 						const piece = board[row]?.[col] ?? null;
@@ -63,6 +68,7 @@ export function Board({
 								isValidMove={isValidMove}
 								isCapture={isCapture}
 								isLastMove={isLastMove}
+								pieceSet={pieceSet}
 								onClick={() => onSquareClick({row, col})}
 							/>
 						);

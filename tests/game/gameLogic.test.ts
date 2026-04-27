@@ -29,7 +29,12 @@ const bQueen: Piece = {type: 'queen', color: 'black', hasMoved: false};
 
 describe('createInitialGameState', () => {
 	test('creates valid initial state', () => {
-		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledExtraPieces: new Set(),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
 		expect(state.currentTurn).toBe('white');
 		expect(state.gameStatus).toBe('playing');
 		expect(state.boardSize).toBe(8);
@@ -246,26 +251,46 @@ describe('getGameStatus', () => {
 
 describe('selectSquare', () => {
 	test('selecting own piece shows valid moves', () => {
-		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledExtraPieces: new Set(),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
 		const newState = selectSquare(state, {row: 6, col: 4});
 		expect(newState.selectedPosition).toStrictEqual({row: 6, col: 4});
 		expect(newState.validMoves.length).toBeGreaterThan(0);
 	});
 
 	test('selecting empty square with no selection does nothing', () => {
-		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledExtraPieces: new Set(),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
 		const newState = selectSquare(state, {row: 4, col: 4});
 		expect(newState).toBe(state);
 	});
 
 	test('selecting opponent piece does nothing', () => {
-		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledExtraPieces: new Set(),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
 		const newState = selectSquare(state, {row: 1, col: 4});
 		expect(newState).toBe(state);
 	});
 
 	test('clicking selected piece again deselects it', () => {
-		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledExtraPieces: new Set(),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
 		const selected = selectSquare(state, {row: 6, col: 4});
 		expect(selected.selectedPosition).toStrictEqual({row: 6, col: 4});
 		const deselected = selectSquare(selected, {row: 6, col: 4});
@@ -274,7 +299,12 @@ describe('selectSquare', () => {
 	});
 
 	test('executing a valid move changes turn', () => {
-		const state = createInitialGameState({boardSize: 8, enabledExtraPieces: new Set()});
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledExtraPieces: new Set(),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
 		const selected = selectSquare(state, {row: 6, col: 4});
 		const moved = selectSquare(selected, {row: 4, col: 4});
 		expect(moved.currentTurn).toBe('black');
