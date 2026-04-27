@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'vite-plus/test';
-import {createInitialBoard, getStandardOffset} from '../../src/game/boardSetup.js';
+import {buildBackRank, createInitialBoard, getStandardOffset} from '../../src/game/boardSetup.js';
 
 describe('getStandardOffset', () => {
 	test('offset is 0 for 8x8 board', () => {
@@ -110,5 +110,73 @@ describe('createInitialBoard', () => {
 		const pieceTypes = blackBackRank.filter((p): p is NonNullable<typeof p> => p != null).map((p) => p.type);
 		expect(pieceTypes).toContain('king');
 		expect(pieceTypes.length).toBe(5);
+	});
+});
+
+describe('buildBackRank', () => {
+	test('standard 8-piece back rank', () => {
+		const rank = buildBackRank(8, new Set());
+		expect(rank).toStrictEqual(['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook']);
+	});
+
+	test('archbishop adds two pieces symmetrically', () => {
+		const rank = buildBackRank(10, new Set(['archbishop']));
+		expect(rank).toStrictEqual([
+			'rook',
+			'knight',
+			'archbishop',
+			'bishop',
+			'queen',
+			'king',
+			'bishop',
+			'archbishop',
+			'knight',
+			'rook',
+		]);
+	});
+
+	test('chancellor adds two pieces symmetrically', () => {
+		const rank = buildBackRank(10, new Set(['chancellor']));
+		expect(rank).toStrictEqual([
+			'rook',
+			'chancellor',
+			'knight',
+			'bishop',
+			'queen',
+			'king',
+			'bishop',
+			'knight',
+			'chancellor',
+			'rook',
+		]);
+	});
+
+	test('all extra pieces on 12x12', () => {
+		const rank = buildBackRank(12, new Set(['archbishop', 'chancellor', 'centaur']));
+		expect(rank).toStrictEqual([
+			'rook',
+			'chancellor',
+			'knight',
+			'archbishop',
+			'bishop',
+			'queen',
+			'centaur',
+			'bishop',
+			'archbishop',
+			'knight',
+			'chancellor',
+			'rook',
+		]);
+	});
+
+	test('centaur replaces king', () => {
+		const rank = buildBackRank(8, new Set(['centaur']));
+		expect(rank).toStrictEqual(['rook', 'knight', 'bishop', 'queen', 'centaur', 'bishop', 'knight', 'rook']);
+	});
+
+	test('extra pieces truncated when board too small', () => {
+		const rank = buildBackRank(8, new Set(['archbishop', 'chancellor']));
+		expect(rank.length).toBe(8);
+		expect(rank).toContain('king');
 	});
 });

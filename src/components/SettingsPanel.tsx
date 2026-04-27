@@ -15,7 +15,7 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 	const backRank = buildBackRank(settings.boardSize, settings.enabledExtraPieces);
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
-		const size = Number(event.target.value);
+		const size = Number(event.target.value) * 2;
 		if (size >= 4 && size <= 16) {
 			onSettingsChange({boardSize: size});
 		}
@@ -42,9 +42,9 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 				<input
 					id="board-size"
 					type="range"
-					min={4}
-					max={16}
-					value={settings.boardSize}
+					min={2}
+					max={8}
+					value={settings.boardSize / 2}
 					onChange={handleBoardSizeChange}
 					className="board-size-slider"
 				/>

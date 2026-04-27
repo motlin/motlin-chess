@@ -16,6 +16,9 @@ export const chancellorDefinition: PieceDefinition = {
 	name: 'Chancellor',
 	symbols: {white: 'C', black: 'c'},
 	isStandard: false,
+	count: 2,
+	royal: false,
+	jumper: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		const rookMoves = getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS);
 		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);

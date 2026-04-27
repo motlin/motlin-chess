@@ -53,5 +53,8 @@ export const pawnDefinition: PieceDefinition = {
 	name: 'Pawn',
 	symbols: {white: '♙', black: '♟'},
 	isStandard: true,
+	count: 2,
+	royal: false,
+	jumper: false,
 	getValidMoves: getPawnMoves,
 };
