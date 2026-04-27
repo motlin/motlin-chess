@@ -16,6 +16,9 @@ export const knightDefinition: PieceDefinition = {
 	name: 'Knight',
 	symbols: {white: '♘', black: '♞'},
 	isStandard: true,
+	count: 2,
+	royal: false,
+	jumper: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);
 	},

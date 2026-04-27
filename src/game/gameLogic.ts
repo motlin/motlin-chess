@@ -75,16 +75,16 @@ function findRookCol(board: Board, row: number, kingCol: number, direction: numb
 	return null;
 }
 
+function isRoyal(type: string): boolean {
+	const def = getPieceDefinition(type);
+	return def?.royal === true;
+}
+
 function findKing(board: Board, color: Color, boardSize: number): Position | null {
 	for (let row = 0; row < boardSize; row++) {
 		for (let col = 0; col < boardSize; col++) {
 			const piece = board[row]?.[col];
-			if (
-				piece !== null &&
-				piece !== undefined &&
-				(piece.type === 'king' || piece.type === 'centaur') &&
-				piece.color === color
-			) {
+			if (piece !== null && piece !== undefined && isRoyal(piece.type) && piece.color === color) {
 				return {row, col};
 			}
 		}
@@ -175,12 +175,7 @@ function getRawMovesForPiece(
 
 function getCastlingMoves(board: Board, position: Position, boardSize: number): Move[] {
 	const piece = board[position.row]?.[position.col];
-	if (
-		piece === null ||
-		piece === undefined ||
-		(piece.type !== 'king' && piece.type !== 'centaur') ||
-		piece.hasMoved
-	) {
+	if (piece === null || piece === undefined || !isRoyal(piece.type) || piece.hasMoved) {
 		return [];
 	}
 
@@ -250,7 +245,7 @@ export function getLegalMoves(
 
 	const rawMoves = getRawMovesForPiece(board, position, boardSize, enPassantTarget);
 
-	if (piece.type === 'king' || piece.type === 'centaur') {
+	if (isRoyal(piece.type)) {
 		rawMoves.push(...getCastlingMoves(board, position, boardSize));
 	}
 

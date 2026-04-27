@@ -16,6 +16,9 @@ export const archbishopDefinition: PieceDefinition = {
 	name: 'Archbishop',
 	symbols: {white: 'A', black: 'a'},
 	isStandard: false,
+	count: 2,
+	royal: false,
+	jumper: true,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		const bishopMoves = getSlidingMoves(position, board, color, boardSize, DIAGONAL_DIRECTIONS);
 		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);

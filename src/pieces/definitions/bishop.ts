@@ -5,6 +5,9 @@ export const bishopDefinition: PieceDefinition = {
 	name: 'Bishop',
 	symbols: {white: '♗', black: '♝'},
 	isStandard: true,
+	count: 2,
+	royal: false,
+	jumper: false,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getSlidingMoves(position, board, color, boardSize, DIAGONAL_DIRECTIONS);
 	},

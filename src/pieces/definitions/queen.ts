@@ -5,6 +5,9 @@ export const queenDefinition: PieceDefinition = {
 	name: 'Queen',
 	symbols: {white: '♕', black: '♛'},
 	isStandard: true,
+	count: 1,
+	royal: false,
+	jumper: false,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getSlidingMoves(position, board, color, boardSize, ALL_DIRECTIONS);
 	},

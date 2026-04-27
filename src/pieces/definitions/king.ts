@@ -7,6 +7,9 @@ export const kingDefinition: PieceDefinition = {
 	name: 'King',
 	symbols: {white: '♔', black: '♚'},
 	isStandard: true,
+	count: 1,
+	royal: true,
+	jumper: false,
 	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
 		return getStepMoves(position, board, color, boardSize, KING_OFFSETS);
 	},
