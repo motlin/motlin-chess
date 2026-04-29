@@ -194,6 +194,9 @@ function getCastlingMoves(board: Board, position: Position, boardSize: number): 
 		}
 
 		const kingToCol = position.col + direction * 2;
+		if (kingToCol < 0 || kingToCol >= boardSize) {
+			continue;
+		}
 		let pathClear = true;
 		const minCol = Math.min(position.col, rookCol);
 		const maxCol = Math.max(position.col, rookCol);
