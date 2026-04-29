@@ -1,15 +1,14 @@
 import {describe, expect, test} from 'vite-plus/test';
-import type {Board, Piece} from '../../src/types.js';
+import type {Piece} from '../../src/types.js';
+import {Board} from '../../src/types.js';
 import {bishopDefinition} from '../../src/pieces/definitions/bishop.js';
 
 function emptyBoard(size: number): Board {
-	return Array.from({length: size}, () => Array.from<Piece | null>({length: size}).fill(null));
+	return Board.empty(size);
 }
 
 function placePiece(board: Board, row: number, col: number, piece: Piece): Board {
-	const newBoard = board.map((r) => [...r]);
-	newBoard[row]![col] = piece;
-	return newBoard;
+	return board.withPiece(row, col, piece);
 }
 
 describe('bishop movement', () => {

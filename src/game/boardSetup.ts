@@ -1,4 +1,5 @@
-import type {Board, Color, Piece, PieceType} from '../types.js';
+import type {Color, Piece, PieceType} from '../types.js';
+import {Board} from '../types.js';
 
 function createPiece(type: PieceType, color: Color): Piece {
 	return {type, color, hasMoved: false};
@@ -78,9 +79,7 @@ export function buildBackRank(enabledPieces: ReadonlySet<string>, boardSize?: nu
 }
 
 export function createInitialBoard(boardSize: number, enabledPieces: ReadonlySet<string>): Board {
-	const board: (Piece | null)[][] = Array.from({length: boardSize}, () =>
-		Array.from<Piece | null>({length: boardSize}).fill(null),
-	);
+	let board = Board.empty(boardSize);
 
 	const backRank = buildBackRank(enabledPieces, boardSize);
 	const offset = Math.floor((boardSize - backRank.length) / 2);
@@ -88,15 +87,15 @@ export function createInitialBoard(boardSize: number, enabledPieces: ReadonlySet
 	for (const [i, pieceType] of backRank.entries()) {
 		const col = offset + i;
 		if (col >= 0 && col < boardSize) {
-			board[0]![col] = createPiece(pieceType, 'black');
-			board[boardSize - 1]![col] = createPiece(pieceType, 'white');
+			board = board.withPiece(0, col, createPiece(pieceType, 'black'));
+			board = board.withPiece(boardSize - 1, col, createPiece(pieceType, 'white'));
 		}
 	}
 
 	if (boardSize >= 4) {
 		for (let col = 0; col < boardSize; col++) {
-			board[1]![col] = createPiece('pawn', 'black');
-			board[boardSize - 2]![col] = createPiece('pawn', 'white');
+			board = board.withPiece(1, col, createPiece('pawn', 'black'));
+			board = board.withPiece(boardSize - 2, col, createPiece('pawn', 'white'));
 		}
 	}
 

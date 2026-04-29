@@ -1,4 +1,5 @@
-import type {Board as BoardType, Move, Position} from '../types.js';
+import type {Move, Position} from '../types.js';
+import {Board as BoardType} from '../types.js';
 import type {BoardTheme} from '../themes.js';
 import {Square} from './Square.js';
 import './Board.css';
@@ -55,7 +56,7 @@ export function Board({
 			<div className="board" style={themeVars}>
 				{Array.from({length: boardSize}, (_, row) =>
 					Array.from({length: boardSize}, (_, col) => {
-						const piece = board[row]?.[col] ?? null;
+						const piece = board.get(row, col);
 						const key = `${row},${col}`;
 						const isLight = (row + col) % 2 === 0;
 						const isSelected =

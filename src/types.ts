@@ -38,7 +38,33 @@ export interface GameState {
 	readonly pendingPromotion: Move | null;
 }
 
-export type Board = ReadonlyArray<ReadonlyArray<Piece | null>>;
+export class Board {
+	readonly size: number;
+	private readonly grid: ReadonlyArray<ReadonlyArray<Piece | null>>;
+
+	constructor(grid: ReadonlyArray<ReadonlyArray<Piece | null>>) {
+		this.size = grid.length;
+		this.grid = grid;
+	}
+
+	get(row: number, col: number): Piece | null {
+		return this.grid[row]![col] as Piece | null;
+	}
+
+	withPiece(row: number, col: number, piece: Piece | null): Board {
+		const grid = this.grid.map((r) => [...r]);
+		grid[row]![col] = piece;
+		return new Board(grid);
+	}
+
+	toMutableGrid(): (Piece | null)[][] {
+		return this.grid.map((r) => [...r]);
+	}
+
+	static empty(size: number): Board {
+		return new Board(Array.from({length: size}, () => Array.from<Piece | null>({length: size}).fill(null)));
+	}
+}
 
 export interface GameSettings {
 	readonly boardSize: number;

@@ -1,4 +1,5 @@
-import type {Board, Color, Position} from '../../types.js';
+import type {Color, Position} from '../../types.js';
+import {Board} from '../../types.js';
 import type {PieceDefinition} from '../PieceDefinition.js';
 import {isInBounds} from '../moveHelpers.js';
 
@@ -15,14 +16,14 @@ function getPawnMoves(
 
 	const oneAhead = position.row + direction;
 	if (isInBounds(oneAhead, position.col, boardSize)) {
-		const targetSquare = board[oneAhead]?.[position.col];
+		const targetSquare = board.get(oneAhead, position.col);
 		if (targetSquare === null) {
 			moves.push({row: oneAhead, col: position.col});
 
 			if (position.row === startRow) {
 				const twoAhead = position.row + direction * 2;
 				if (isInBounds(twoAhead, position.col, boardSize)) {
-					const twoAheadSquare = board[twoAhead]?.[position.col];
+					const twoAheadSquare = board.get(twoAhead, position.col);
 					if (twoAheadSquare === null) {
 						moves.push({row: twoAhead, col: position.col});
 					}
@@ -36,8 +37,8 @@ function getPawnMoves(
 		if (!isInBounds(oneAhead, captureCol, boardSize)) {
 			continue;
 		}
-		const captureTarget = board[oneAhead]?.[captureCol];
-		if (captureTarget !== null && captureTarget !== undefined && captureTarget.color !== color) {
+		const captureTarget = board.get(oneAhead, captureCol);
+		if (captureTarget !== null && captureTarget.color !== color) {
 			moves.push({row: oneAhead, col: captureCol});
 		}
 

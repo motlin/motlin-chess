@@ -1,5 +1,6 @@
 import {describe, expect, test} from 'vite-plus/test';
-import type {Board, GameState, Piece} from '../../src/types.js';
+import type {GameState, Piece} from '../../src/types.js';
+import {Board} from '../../src/types.js';
 import {
 	applyMove,
 	completePromotion,
@@ -12,13 +13,11 @@ import {
 } from '../../src/game/gameLogic.js';
 
 function emptyBoard(size: number): Board {
-	return Array.from({length: size}, () => Array.from<Piece | null>({length: size}).fill(null));
+	return Board.empty(size);
 }
 
 function placePiece(board: Board, row: number, col: number, piece: Piece): Board {
-	const newBoard = board.map((r) => [...r]);
-	newBoard[row]![col] = piece;
-	return newBoard;
+	return board.withPiece(row, col, piece);
 }
 
 const wKing: Piece = {type: 'king', color: 'white', hasMoved: false};
@@ -165,9 +164,9 @@ describe('applyMove', () => {
 			isCastle: false,
 			promotion: null,
 		});
-		expect(newBoard[6]![4]).toBeNull();
-		expect(newBoard[4]![4]?.type).toBe('pawn');
-		expect(newBoard[4]![4]?.hasMoved).toBe(true);
+		expect(newBoard.get(6, 4)).toBeNull();
+		expect(newBoard.get(4, 4)?.type).toBe('pawn');
+		expect(newBoard.get(4, 4)?.hasMoved).toBe(true);
 	});
 
 	test('en passant removes captured pawn', () => {
@@ -182,8 +181,8 @@ describe('applyMove', () => {
 			isCastle: false,
 			promotion: null,
 		});
-		expect(newBoard[3]![4]).toBeNull();
-		expect(newBoard[2]![4]?.color).toBe('white');
+		expect(newBoard.get(3, 4)).toBeNull();
+		expect(newBoard.get(2, 4)?.color).toBe('white');
 	});
 
 	test('castling moves rook', () => {
@@ -198,10 +197,10 @@ describe('applyMove', () => {
 			isCastle: true,
 			promotion: null,
 		});
-		expect(newBoard[7]![6]?.type).toBe('king');
-		expect(newBoard[7]![5]?.type).toBe('rook');
-		expect(newBoard[7]![7]).toBeNull();
-		expect(newBoard[7]![4]).toBeNull();
+		expect(newBoard.get(7, 6)?.type).toBe('king');
+		expect(newBoard.get(7, 5)?.type).toBe('rook');
+		expect(newBoard.get(7, 7)).toBeNull();
+		expect(newBoard.get(7, 4)).toBeNull();
 	});
 
 	test('promotion changes piece type', () => {
@@ -215,8 +214,8 @@ describe('applyMove', () => {
 			isCastle: false,
 			promotion: 'queen',
 		});
-		expect(newBoard[0]![3]?.type).toBe('queen');
-		expect(newBoard[0]![3]?.color).toBe('white');
+		expect(newBoard.get(0, 3)?.type).toBe('queen');
+		expect(newBoard.get(0, 3)?.color).toBe('white');
 	});
 });
 
@@ -359,7 +358,7 @@ describe('pawn promotion flow', () => {
 		const selected = selectSquare(state, {row: 1, col: 3});
 		const promoted = selectSquare(selected, {row: 0, col: 3});
 		const completed = completePromotion(promoted, 'queen');
-		expect(completed.board[0]![3]?.type).toBe('queen');
+		expect(completed.board.get(0, 3)?.type).toBe('queen');
 		expect(completed.currentTurn).toBe('black');
 		expect(completed.pendingPromotion).toBeNull();
 	});
@@ -405,10 +404,10 @@ describe('centaur as royal piece', () => {
 		const moves = getLegalMoves(board, {row: 7, col: 4}, 8, null);
 		const castleMove = moves.find((m) => m.isCastle && m.to.col === 6)!;
 		const newBoard = applyMove(board, castleMove);
-		expect(newBoard[7]![6]?.type).toBe('centaur');
-		expect(newBoard[7]![5]?.type).toBe('rook');
-		expect(newBoard[7]![4]).toBeNull();
-		expect(newBoard[7]![7]).toBeNull();
+		expect(newBoard.get(7, 6)?.type).toBe('centaur');
+		expect(newBoard.get(7, 5)?.type).toBe('rook');
+		expect(newBoard.get(7, 4)).toBeNull();
+		expect(newBoard.get(7, 7)).toBeNull();
 	});
 
 	test('centaur cannot castle through check', () => {

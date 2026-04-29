@@ -1,5 +1,6 @@
 import {describe, expect, test} from 'vite-plus/test';
-import type {Board, GameState, Piece} from '../../src/types.js';
+import type {GameState, Piece} from '../../src/types.js';
+import {Board} from '../../src/types.js';
 import {
 	applyMove,
 	completePromotion,
@@ -11,13 +12,11 @@ import {
 import {createInitialBoard} from '../../src/game/boardSetup.js';
 
 function emptyBoard(size: number): Board {
-	return Array.from({length: size}, () => Array.from<Piece | null>({length: size}).fill(null));
+	return Board.empty(size);
 }
 
 function placePiece(board: Board, row: number, col: number, piece: Piece): Board {
-	const newBoard = board.map((r) => [...r]);
-	newBoard[row]![col] = piece;
-	return newBoard;
+	return board.withPiece(row, col, piece);
 }
 
 const wKing: Piece = {type: 'king', color: 'white', hasMoved: false};
@@ -94,7 +93,7 @@ describe('pawn promotion on various board sizes', () => {
 		const promoted = selectSquare(selected, {row: 0, col: 1});
 		expect(promoted.pendingPromotion).not.toBeNull();
 		const completed = completePromotion(promoted, 'queen');
-		expect(completed.board[0]![1]?.type).toBe('queen');
+		expect(completed.board.get(0, 1)?.type).toBe('queen');
 		expect(completed.currentTurn).toBe('black');
 	});
 
@@ -133,10 +132,10 @@ describe('castling on various board sizes', () => {
 		expect(castleMove).toBeDefined();
 
 		const newBoard = applyMove(board, castleMove!);
-		expect(newBoard[9]![7]?.type).toBe('king');
-		expect(newBoard[9]![6]?.type).toBe('rook');
-		expect(newBoard[9]![5]).toBeNull();
-		expect(newBoard[9]![8]).toBeNull();
+		expect(newBoard.get(9, 7)?.type).toBe('king');
+		expect(newBoard.get(9, 6)?.type).toBe('rook');
+		expect(newBoard.get(9, 5)).toBeNull();
+		expect(newBoard.get(9, 8)).toBeNull();
 	});
 
 	test('10x10 queen-side castling moves rook correctly', () => {
@@ -150,10 +149,10 @@ describe('castling on various board sizes', () => {
 		expect(castleMove).toBeDefined();
 
 		const newBoard = applyMove(board, castleMove!);
-		expect(newBoard[9]![3]?.type).toBe('king');
-		expect(newBoard[9]![4]?.type).toBe('rook');
-		expect(newBoard[9]![5]).toBeNull();
-		expect(newBoard[9]![1]).toBeNull();
+		expect(newBoard.get(9, 3)?.type).toBe('king');
+		expect(newBoard.get(9, 4)?.type).toBe('rook');
+		expect(newBoard.get(9, 5)).toBeNull();
+		expect(newBoard.get(9, 1)).toBeNull();
 	});
 
 	test('12x12 king-side castling', () => {
@@ -167,8 +166,8 @@ describe('castling on various board sizes', () => {
 		expect(castleMove).toBeDefined();
 
 		const newBoard = applyMove(board, castleMove!);
-		expect(newBoard[11]![8]?.type).toBe('king');
-		expect(newBoard[11]![7]?.type).toBe('rook');
+		expect(newBoard.get(11, 8)?.type).toBe('king');
+		expect(newBoard.get(11, 7)?.type).toBe('rook');
 	});
 
 	test('12x12 queen-side castling', () => {
@@ -182,14 +181,20 @@ describe('castling on various board sizes', () => {
 		expect(castleMove).toBeDefined();
 
 		const newBoard = applyMove(board, castleMove!);
-		expect(newBoard[11]![4]?.type).toBe('king');
-		expect(newBoard[11]![5]?.type).toBe('rook');
+		expect(newBoard.get(11, 4)?.type).toBe('king');
+		expect(newBoard.get(11, 5)?.type).toBe('rook');
 	});
 
 	test('no castling on 4x4 board with R B K R layout', () => {
 		const pieces4 = new Set(['king', 'rook', 'bishop', 'pawn']);
 		const board = createInitialBoard(4, pieces4);
-		const kingCol = board[3]!.findIndex((p) => p?.type === 'king');
+		let kingCol = 0;
+		for (let col = 0; col < 4; col++) {
+			if (board.get(3, col)?.type === 'king') {
+				kingCol = col;
+				break;
+			}
+		}
 		const moves = getLegalMoves(board, {row: 3, col: kingCol}, 4, null);
 		const castleMoves = moves.filter((m) => m.isCastle);
 		expect(castleMoves.length).toBe(0);
@@ -236,10 +241,10 @@ describe('en passant on various board sizes', () => {
 		expect(epMove).toBeDefined();
 
 		const newBoard = applyMove(board, epMove!);
-		expect(newBoard[4]![7]?.type).toBe('pawn');
-		expect(newBoard[4]![7]?.color).toBe('white');
-		expect(newBoard[5]![7]).toBeNull();
-		expect(newBoard[5]![6]).toBeNull();
+		expect(newBoard.get(4, 7)?.type).toBe('pawn');
+		expect(newBoard.get(4, 7)?.color).toBe('white');
+		expect(newBoard.get(5, 7)).toBeNull();
+		expect(newBoard.get(5, 6)).toBeNull();
 	});
 });
 
@@ -276,10 +281,7 @@ describe('initial board correctness', () => {
 	test('all board sizes have correct dimensions', () => {
 		for (const size of [4, 6, 8, 10, 12, 14, 16]) {
 			const board = createInitialBoard(size, STD);
-			expect(board.length).toBe(size);
-			for (const row of board) {
-				expect(row.length).toBe(size);
-			}
+			expect(board.size).toBe(size);
 		}
 	});
 
@@ -287,10 +289,10 @@ describe('initial board correctness', () => {
 		for (const size of [4, 6, 8, 10, 12, 14, 16]) {
 			const board = createInitialBoard(size, STD);
 			for (let col = 0; col < size; col++) {
-				expect(board[1]![col]?.type).toBe('pawn');
-				expect(board[1]![col]?.color).toBe('black');
-				expect(board[size - 2]![col]?.type).toBe('pawn');
-				expect(board[size - 2]![col]?.color).toBe('white');
+				expect(board.get(1, col)?.type).toBe('pawn');
+				expect(board.get(1, col)?.color).toBe('black');
+				expect(board.get(size - 2, col)?.type).toBe('pawn');
+				expect(board.get(size - 2, col)?.color).toBe('white');
 			}
 		}
 	});
@@ -300,7 +302,7 @@ describe('initial board correctness', () => {
 			const board = createInitialBoard(size, STD);
 			for (let row = 2; row < size - 2; row++) {
 				for (let col = 0; col < size; col++) {
-					expect(board[row]![col]).toBeNull();
+					expect(board.get(row, col)).toBeNull();
 				}
 			}
 		}
@@ -313,7 +315,7 @@ describe('initial board correctness', () => {
 			let blackKings = 0;
 			for (let row = 0; row < size; row++) {
 				for (let col = 0; col < size; col++) {
-					const piece = board[row]![col];
+					const piece = board.get(row, col);
 					if (piece?.type === 'king') {
 						if (piece.color === 'white') whiteKings++;
 						else blackKings++;
@@ -328,7 +330,7 @@ describe('initial board correctness', () => {
 	test('back rank is symmetric on 8x8 and larger boards', () => {
 		for (const size of [8, 10, 12, 14, 16]) {
 			const board = createInitialBoard(size, STD);
-			const backRank = Array.from({length: size}, (_, col) => board[0]![col]?.type ?? null);
+			const backRank = Array.from({length: size}, (_, col) => board.get(0, col)?.type ?? null);
 			const nonNull = backRank.filter((t) => t !== null);
 			const offset = Math.floor((size - nonNull.length) / 2);
 
@@ -346,8 +348,8 @@ describe('initial board correctness', () => {
 		const board = createInitialBoard(12, allPieces);
 		const whitePieces: string[] = [];
 		for (let col = 0; col < 12; col++) {
-			const piece = board[11]?.[col];
-			if (piece !== null && piece !== undefined) {
+			const piece = board.get(11, col);
+			if (piece !== null) {
 				whitePieces.push(piece.type);
 			}
 		}

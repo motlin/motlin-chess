@@ -1,4 +1,5 @@
-import type {Board, Color, Position} from '../types.js';
+import type {Color, Position} from '../types.js';
+import {Board} from '../types.js';
 
 export interface Direction {
 	readonly dRow: number;
@@ -37,10 +38,7 @@ export function getSlidingMoves(
 		let row = position.row + dRow;
 		let col = position.col + dCol;
 		while (isInBounds(row, col, boardSize)) {
-			const target = board[row]?.[col];
-			if (target === undefined) {
-				break;
-			}
+			const target = board.get(row, col);
 			if (target === null) {
 				moves.push({row, col});
 			} else {
@@ -70,10 +68,7 @@ export function getStepMoves(
 		if (!isInBounds(row, col, boardSize)) {
 			continue;
 		}
-		const target = board[row]?.[col];
-		if (target === undefined) {
-			continue;
-		}
+		const target = board.get(row, col);
 		if (target === null || target.color !== color) {
 			moves.push({row, col});
 		}
