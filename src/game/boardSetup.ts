@@ -1,5 +1,4 @@
 import type {Board, Color, Piece, PieceType} from '../types.js';
-import {getPieceDefinition} from '../pieces/registry.js';
 
 function createPiece(type: PieceType, color: Color): Piece {
 	return {type, color, hasMoved: false};
@@ -60,11 +59,6 @@ function trimToFit(rank: readonly PieceType[], boardSize: number): readonly Piec
 			break;
 		}
 
-		const isRoyal = getPieceDefinition(pieceToRemove)?.royal === true;
-		if (isRoyal) {
-			continue;
-		}
-
 		let rightIdx = result.lastIndexOf(pieceToRemove);
 		while (rightIdx !== -1 && result.length > boardSize) {
 			result.splice(rightIdx, 1);
@@ -91,11 +85,7 @@ export function createInitialBoard(boardSize: number, enabledPieces: ReadonlySet
 	const backRank = buildBackRank(enabledPieces, boardSize);
 	const offset = Math.floor((boardSize - backRank.length) / 2);
 
-	for (let i = 0; i < backRank.length; i++) {
-		const pieceType = backRank[i];
-		if (pieceType === undefined) {
-			continue;
-		}
+	for (const [i, pieceType] of backRank.entries()) {
 		const col = offset + i;
 		if (col >= 0 && col < boardSize) {
 			board[0]![col] = createPiece(pieceType, 'black');

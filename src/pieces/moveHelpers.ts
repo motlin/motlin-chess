@@ -37,11 +37,7 @@ export function getSlidingMoves(
 		let row = position.row + dRow;
 		let col = position.col + dCol;
 		while (isInBounds(row, col, boardSize)) {
-			const targetRow = board[row];
-			if (targetRow === undefined) {
-				break;
-			}
-			const target = targetRow[col];
+			const target = board[row]?.[col];
 			if (target === undefined) {
 				break;
 			}
