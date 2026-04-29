@@ -206,11 +206,47 @@ describe('buildBackRank', () => {
 		expect(rank.length).toBe(10);
 	});
 
+	test('trimming with all fairy pieces on 10x10', () => {
+		const allFairy = withPieces(
+			'archbishop',
+			'chancellor',
+			'amazon',
+			'elephant',
+			'zebra',
+			'mann',
+			'champion',
+			'wizard',
+			'dragon',
+		);
+		const rank = buildBackRank(allFairy, 10);
+		expect(rank.length).toBe(10);
+		expect(rank).toContain('king');
+		expect(rank).toContain('rook');
+	});
+
 	test('trimming always keeps the royal piece', () => {
 		for (const size of [4, 6, 8, 10]) {
 			const rank = buildBackRank(withPieces('archbishop', 'chancellor', 'centaur'), size);
 			expect(rank).toContain('centaur');
 			expect(rank.length).toBeLessThanOrEqual(size);
 		}
+	});
+
+	test('amazon is count:1 so only one appears', () => {
+		const rank = buildBackRank(withPieces('amazon'));
+		const amazonCount = rank.filter((p) => p === 'amazon').length;
+		expect(amazonCount).toBe(1);
+	});
+
+	test('full rank with all fairy pieces has correct ordering', () => {
+		const allPieces = withPieces('archbishop', 'chancellor', 'elephant', 'zebra', 'mann');
+		const rank = buildBackRank(allPieces);
+		const kingIdx = rank.indexOf('king');
+		const queenIdx = rank.indexOf('queen');
+		expect(queenIdx).toBeLessThan(kingIdx);
+		const leftRookIdx = rank.indexOf('rook');
+		const rightRookIdx = rank.lastIndexOf('rook');
+		expect(leftRookIdx).toBe(0);
+		expect(rightRookIdx).toBe(rank.length - 1);
 	});
 });

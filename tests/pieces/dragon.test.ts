@@ -42,4 +42,36 @@ describe('dragon movement', () => {
 		const moves = dragonDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
 		expect(moves.find((m) => m.row === 3 && m.col === 3)).toBeUndefined();
 	});
+
+	test('black dragon captures forward (direction is +1)', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 5, 3, {type: 'pawn', color: 'white', hasMoved: false});
+		board = placePiece(board, 5, 5, {type: 'pawn', color: 'white', hasMoved: false});
+		const moves = dragonDefinition.getValidMoves({row: 4, col: 4}, board, 'black', 8, null);
+		expect(moves).toContainEqual({row: 5, col: 3});
+		expect(moves).toContainEqual({row: 5, col: 5});
+	});
+
+	test('cannot move to empty diagonal forward squares', () => {
+		const board = emptyBoard(8);
+		const moves = dragonDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		expect(moves.find((m) => m.row === 3 && m.col === 3)).toBeUndefined();
+		expect(moves.find((m) => m.row === 3 && m.col === 5)).toBeUndefined();
+	});
+
+	test('no duplicate moves when knight and diagonal capture overlap', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 2, 3, {type: 'pawn', color: 'black', hasMoved: false});
+		const moves = dragonDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		const matchingMoves = moves.filter((m) => m.row === 2 && m.col === 3);
+		expect(matchingMoves.length).toBe(1);
+	});
+
+	test('dragon at board edge cannot capture off-board diagonally', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 0, 0, {type: 'pawn', color: 'black', hasMoved: false});
+		const moves = dragonDefinition.getValidMoves({row: 0, col: 7}, board, 'white', 8, null);
+		const offBoard = moves.filter((m) => m.col < 0 || m.col >= 8 || m.row < 0);
+		expect(offBoard.length).toBe(0);
+	});
 });

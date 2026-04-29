@@ -1,4 +1,5 @@
-import type {Board, Color, Position} from '../../types.js';
+import type {Color, Position} from '../../types.js';
+import {Board} from '../../types.js';
 import type {PieceDefinition} from '../PieceDefinition.js';
 import {getStepMoves, isInBounds} from '../moveHelpers.js';
 

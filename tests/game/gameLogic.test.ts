@@ -477,6 +477,15 @@ describe('fairy pieces in game scenarios', () => {
 		expect(isInCheck(board, 'black', 8)).toBe(true);
 	});
 
+	test('amazon gives check via knight jump over blocking piece', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 4, 4, {type: 'amazon', color: 'white', hasMoved: false});
+		board = placePiece(board, 5, 5, {type: 'pawn', color: 'black', hasMoved: false});
+		board = placePiece(board, 6, 5, bKing);
+		board = placePiece(board, 0, 0, wKing);
+		expect(isInCheck(board, 'black', 8)).toBe(true);
+	});
+
 	test('pinned piece cannot move even if fairy piece', () => {
 		let board = emptyBoard(8);
 		board = placePiece(board, 0, 0, wKing);
