@@ -54,4 +54,12 @@ describe('archbishop movement', () => {
 		const uniqueKeys = new Set(keys);
 		expect(uniqueKeys.size).toBe(keys.length);
 	});
+
+	test('deduplication works when knight and bishop targets overlap', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 2, 2, {type: 'pawn', color: 'black', hasMoved: false});
+		const moves = archbishopDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		const at22 = moves.filter((m) => m.row === 2 && m.col === 2);
+		expect(at22.length).toBe(1);
+	});
 });

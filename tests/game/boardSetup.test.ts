@@ -15,6 +15,11 @@ describe('getStandardOffset', () => {
 		expect(getStandardOffset(10)).toBe(1);
 	});
 
+	test('offset is 0 for boards smaller than 8', () => {
+		expect(getStandardOffset(4)).toBe(0);
+		expect(getStandardOffset(6)).toBe(0);
+	});
+
 	test('offset is 2 for 12x12 board', () => {
 		expect(getStandardOffset(12)).toBe(2);
 	});
@@ -194,5 +199,21 @@ describe('buildBackRank', () => {
 		const rank = buildBackRank(pieces);
 		expect(rank).not.toContain('bishop');
 		expect(rank).toStrictEqual(['rook', 'knight', 'queen', 'king', 'knight', 'rook']);
+	});
+
+	test('trimming with fairy pieces on 10x10 keeps them and removes knights', () => {
+		const rank = buildBackRank(withPieces('archbishop', 'chancellor'), 10);
+		expect(rank).not.toContain('knight');
+		expect(rank).toContain('archbishop');
+		expect(rank).toContain('chancellor');
+		expect(rank.length).toBe(10);
+	});
+
+	test('trimming always keeps the royal piece', () => {
+		for (const size of [4, 6, 8, 10]) {
+			const rank = buildBackRank(withPieces('archbishop', 'chancellor', 'centaur'), size);
+			expect(rank).toContain('centaur');
+			expect(rank.length).toBeLessThanOrEqual(size);
+		}
 	});
 });

@@ -5,6 +5,7 @@ import {
 	completePromotion,
 	createInitialGameState,
 	getGameStatus,
+	getKingColumn,
 	getLegalMoves,
 	isInCheck,
 	selectSquare,
@@ -361,5 +362,214 @@ describe('pawn promotion flow', () => {
 		expect(completed.board[0]![3]?.type).toBe('queen');
 		expect(completed.currentTurn).toBe('black');
 		expect(completed.pendingPromotion).toBeNull();
+	});
+});
+
+describe('centaur as royal piece', () => {
+	const wCentaur: Piece = {type: 'centaur', color: 'white', hasMoved: false};
+	const bCentaur: Piece = {type: 'centaur', color: 'black', hasMoved: false};
+
+	test('centaur is detected as royal for check', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 7, 4, wCentaur);
+		board = placePiece(board, 0, 4, bRook);
+		board = placePiece(board, 0, 0, bKing);
+		expect(isInCheck(board, 'white', 8)).toBe(true);
+	});
+
+	test('centaur can castle king-side', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 7, 4, wCentaur);
+		board = placePiece(board, 7, 7, wRook);
+		board = placePiece(board, 0, 4, bKing);
+		const moves = getLegalMoves(board, {row: 7, col: 4}, 8, null);
+		const castleMove = moves.find((m) => m.isCastle && m.to.col === 6);
+		expect(castleMove).toBeDefined();
+	});
+
+	test('centaur can castle queen-side', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 7, 4, wCentaur);
+		board = placePiece(board, 7, 0, wRook);
+		board = placePiece(board, 0, 4, bKing);
+		const moves = getLegalMoves(board, {row: 7, col: 4}, 8, null);
+		const castleMove = moves.find((m) => m.isCastle && m.to.col === 2);
+		expect(castleMove).toBeDefined();
+	});
+
+	test('centaur castling moves rook correctly', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 7, 4, wCentaur);
+		board = placePiece(board, 7, 7, wRook);
+		board = placePiece(board, 0, 4, bKing);
+		const moves = getLegalMoves(board, {row: 7, col: 4}, 8, null);
+		const castleMove = moves.find((m) => m.isCastle && m.to.col === 6)!;
+		const newBoard = applyMove(board, castleMove);
+		expect(newBoard[7]![6]?.type).toBe('centaur');
+		expect(newBoard[7]![5]?.type).toBe('rook');
+		expect(newBoard[7]![4]).toBeNull();
+		expect(newBoard[7]![7]).toBeNull();
+	});
+
+	test('centaur cannot castle through check', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 7, 4, wCentaur);
+		board = placePiece(board, 7, 7, wRook);
+		board = placePiece(board, 0, 5, bRook);
+		board = placePiece(board, 0, 0, bKing);
+		const moves = getLegalMoves(board, {row: 7, col: 4}, 8, null);
+		const castleMove = moves.find((m) => m.isCastle && m.to.col === 6);
+		expect(castleMove).toBeUndefined();
+	});
+
+	test('centaur has knight moves in addition to king moves', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 4, 4, wCentaur);
+		board = placePiece(board, 0, 0, bKing);
+		const moves = getLegalMoves(board, {row: 4, col: 4}, 8, null);
+		const knightMove = moves.find((m) => m.to.row === 2 && m.to.col === 3);
+		expect(knightMove).toBeDefined();
+		const kingMove = moves.find((m) => m.to.row === 3 && m.to.col === 3);
+		expect(kingMove).toBeDefined();
+	});
+
+	test('checkmate with centaur', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 0, 0, bCentaur);
+		board = placePiece(board, 1, 0, {type: 'queen', color: 'white', hasMoved: false});
+		board = placePiece(board, 1, 1, wRook);
+		board = placePiece(board, 7, 7, wKing);
+		expect(getGameStatus(board, 'black', 8, null)).toBe('checkmate');
+	});
+});
+
+describe('fairy pieces in game scenarios', () => {
+	test('archbishop gives check via diagonal', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 4, 4, {type: 'archbishop', color: 'white', hasMoved: false});
+		board = placePiece(board, 7, 7, bKing);
+		board = placePiece(board, 0, 0, wKing);
+		expect(isInCheck(board, 'black', 8)).toBe(true);
+	});
+
+	test('archbishop gives check via knight jump', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 5, 6, {type: 'archbishop', color: 'white', hasMoved: false});
+		board = placePiece(board, 7, 7, bKing);
+		board = placePiece(board, 0, 0, wKing);
+		expect(isInCheck(board, 'black', 8)).toBe(true);
+	});
+
+	test('chancellor gives check via rook line', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 7, 0, {type: 'chancellor', color: 'white', hasMoved: false});
+		board = placePiece(board, 7, 7, bKing);
+		board = placePiece(board, 0, 0, wKing);
+		expect(isInCheck(board, 'black', 8)).toBe(true);
+	});
+
+	test('pinned piece cannot move even if fairy piece', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 0, 0, wKing);
+		board = placePiece(board, 0, 1, {type: 'archbishop', color: 'white', hasMoved: false});
+		board = placePiece(board, 0, 7, bRook);
+		board = placePiece(board, 7, 7, bKing);
+		const moves = getLegalMoves(board, {row: 0, col: 1}, 8, null);
+		for (const move of moves) {
+			expect(move.to.row).toBe(0);
+		}
+	});
+});
+
+describe('selectSquare edge cases', () => {
+	test('clicking empty square while piece selected deselects', () => {
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
+		const selected = selectSquare(state, {row: 6, col: 4});
+		expect(selected.selectedPosition).not.toBeNull();
+		const deselected = selectSquare(selected, {row: 3, col: 3});
+		expect(deselected.selectedPosition).toBeNull();
+		expect(deselected.validMoves).toStrictEqual([]);
+	});
+
+	test('clicking opponent piece while own piece selected deselects', () => {
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
+		const selected = selectSquare(state, {row: 6, col: 4});
+		const clickedOpponent = selectSquare(selected, {row: 1, col: 0});
+		expect(clickedOpponent.selectedPosition).toBeNull();
+	});
+
+	test('selectSquare does nothing during pending promotion', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 1, 3, wPawn);
+		board = placePiece(board, 7, 7, wKing);
+		board = placePiece(board, 0, 0, bKing);
+		const state: GameState = {
+			board,
+			currentTurn: 'white',
+			selectedPosition: null,
+			validMoves: [],
+			moveHistory: [],
+			boardSize: 8,
+			gameStatus: 'playing',
+			enPassantTarget: null,
+			pendingPromotion: null,
+		};
+		const selected = selectSquare(state, {row: 1, col: 3});
+		const promoted = selectSquare(selected, {row: 0, col: 3});
+		expect(promoted.pendingPromotion).not.toBeNull();
+		const blocked = selectSquare(promoted, {row: 4, col: 4});
+		expect(blocked).toBe(promoted);
+	});
+
+	test('selectSquare does nothing after checkmate', () => {
+		let board = emptyBoard(8);
+		board = placePiece(board, 0, 0, wKing);
+		board = placePiece(board, 1, 0, bQueen);
+		board = placePiece(board, 1, 1, {type: 'rook', color: 'black', hasMoved: false});
+		board = placePiece(board, 7, 7, bKing);
+		const state: GameState = {
+			board,
+			currentTurn: 'white',
+			selectedPosition: null,
+			validMoves: [],
+			moveHistory: [],
+			boardSize: 8,
+			gameStatus: 'checkmate',
+			enPassantTarget: null,
+			pendingPromotion: null,
+		};
+		const result = selectSquare(state, {row: 0, col: 0});
+		expect(result).toBe(state);
+	});
+});
+
+describe('completePromotion edge cases', () => {
+	test('completePromotion does nothing when no promotion pending', () => {
+		const state = createInitialGameState({
+			boardSize: 8,
+			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+		});
+		const result = completePromotion(state, 'queen');
+		expect(result).toBe(state);
+	});
+});
+
+describe('getKingColumn', () => {
+	test('returns correct column for various board sizes', () => {
+		expect(getKingColumn(8)).toBe(4);
+		expect(getKingColumn(10)).toBe(5);
+		expect(getKingColumn(12)).toBe(6);
 	});
 });
