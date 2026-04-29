@@ -17,21 +17,25 @@ function buildFullBackRank(enabledPieces: ReadonlySet<string>): readonly PieceTy
 
 	const royalPiece: PieceType = has('centaur') ? 'centaur' : 'king';
 
+	const pairedPieces: PieceType[] = [
+		'bishop',
+		'archbishop',
+		'elephant',
+		'knight',
+		'camel',
+		'wizard',
+		'chancellor',
+		'zebra',
+		'mann',
+		'champion',
+		'dragon',
+	];
+
 	const rightHalf: PieceType[] = [royalPiece];
-	if (has('bishop')) {
-		rightHalf.push('bishop');
-	}
-	if (has('archbishop')) {
-		rightHalf.push('archbishop');
-	}
-	if (has('knight')) {
-		rightHalf.push('knight');
-	}
-	if (has('camel')) {
-		rightHalf.push('camel');
-	}
-	if (has('chancellor')) {
-		rightHalf.push('chancellor');
+	for (const piece of pairedPieces) {
+		if (has(piece)) {
+			rightHalf.push(piece);
+		}
 	}
 	if (has('rook')) {
 		rightHalf.push('rook');
@@ -40,16 +44,34 @@ function buildFullBackRank(enabledPieces: ReadonlySet<string>): readonly PieceTy
 	const leftHalf = [...rightHalf].reverse();
 	leftHalf.pop();
 
+	const singlePieces: PieceType[] = ['queen', 'amazon'];
 	const fullRank: PieceType[] = [...leftHalf];
-	if (has('queen')) {
-		fullRank.push('queen');
+	for (const piece of singlePieces) {
+		if (has(piece)) {
+			fullRank.push(piece);
+		}
 	}
 	fullRank.push(...rightHalf);
 
 	return fullRank;
 }
 
-const REMOVAL_ORDER: readonly string[] = ['camel', 'knight', 'chancellor', 'archbishop', 'queen', 'bishop', 'rook'];
+const REMOVAL_ORDER: readonly string[] = [
+	'camel',
+	'knight',
+	'wizard',
+	'zebra',
+	'mann',
+	'champion',
+	'dragon',
+	'elephant',
+	'chancellor',
+	'archbishop',
+	'amazon',
+	'queen',
+	'bishop',
+	'rook',
+];
 
 function trimToFit(rank: readonly PieceType[], boardSize: number): readonly PieceType[] {
 	if (rank.length <= boardSize) {

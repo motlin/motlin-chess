@@ -166,6 +166,13 @@ export function getPieceImagePath(pieceSet: string, color: 'white' | 'black', pi
 		camel: 'L',
 		chancellor: 'C',
 		centaur: 'U',
+		amazon: 'M',
+		elephant: 'E',
+		zebra: 'Z',
+		mann: 'X',
+		champion: 'H',
+		wizard: 'W',
+		dragon: 'D',
 	};
 	const typeSuffix = typeMap[pieceType] ?? pieceType.charAt(0).toUpperCase();
 	return `/pieces/${pieceSet}/${colorPrefix}${typeSuffix}.svg`;
