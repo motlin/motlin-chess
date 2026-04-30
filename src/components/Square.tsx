@@ -9,6 +9,7 @@ interface SquareProps {
 	readonly isValidMove: boolean;
 	readonly isCapture: boolean;
 	readonly isLastMove: boolean;
+	readonly isDuck: boolean;
 	readonly pieceSet: string;
 	readonly onClick: () => void;
 }
@@ -20,6 +21,7 @@ export function Square({
 	isValidMove,
 	isCapture,
 	isLastMove,
+	isDuck,
 	pieceSet,
 	onClick,
 }: SquareProps): React.JSX.Element {
@@ -30,14 +32,16 @@ export function Square({
 		isValidMove ? 'square-valid-move' : '',
 		isCapture ? 'square-capture' : '',
 		isLastMove ? 'square-last-move' : '',
+		isDuck ? 'square-duck' : '',
 	]
 		.filter(Boolean)
 		.join(' ');
 
 	return (
 		<button type="button" className={classes} onClick={onClick}>
-			{piece !== null && <PieceDisplay piece={piece} pieceSet={pieceSet} />}
-			{isValidMove && piece === null && <span className="move-indicator" />}
+			{isDuck && <img src="/pieces/duck.svg" alt="Duck" className="piece" draggable={false} />}
+			{piece !== null && !isDuck && <PieceDisplay piece={piece} pieceSet={pieceSet} />}
+			{isValidMove && piece === null && !isDuck && <span className="move-indicator" />}
 		</button>
 	);
 }

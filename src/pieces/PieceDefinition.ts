@@ -14,5 +14,6 @@ export interface PieceDefinition {
 		color: Color,
 		boardSize: number,
 		enPassantTarget: Position | null,
+		duckPosition?: Position | null,
 	): Position[];
 }

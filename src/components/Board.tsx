@@ -1,4 +1,4 @@
-import type {Move, Position} from '../types.js';
+import type {Move, Position, TurnPhase} from '../types.js';
 import {Board as BoardType} from '../types.js';
 import type {BoardTheme} from '../themes.js';
 import {Square} from './Square.js';
@@ -12,6 +12,8 @@ interface BoardProps {
 	readonly lastMove: Move | null;
 	readonly pieceSet: string;
 	readonly boardTheme: BoardTheme;
+	readonly duckPosition: Position | null;
+	readonly turnPhase: TurnPhase;
 	readonly onSquareClick: (position: Position) => void;
 }
 
@@ -23,6 +25,8 @@ export function Board({
 	lastMove,
 	pieceSet,
 	boardTheme,
+	duckPosition,
+	turnPhase,
 	onSquareClick,
 }: BoardProps): React.JSX.Element {
 	const validMoveSet = new Set(validMoves.map((m) => `${m.to.row},${m.to.col}`));
@@ -64,6 +68,8 @@ export function Board({
 						const isValidMove = validMoveSet.has(key);
 						const isCapture = captureMoveSet.has(key);
 						const isLastMove = lastMoveSet.has(key);
+						const isDuck = duckPosition !== null && duckPosition.row === row && duckPosition.col === col;
+						const isDuckTarget = turnPhase === 'placeDuck' && piece === null && !isDuck;
 
 						return (
 							<Square
@@ -71,9 +77,10 @@ export function Board({
 								piece={piece}
 								isLight={isLight}
 								isSelected={isSelected}
-								isValidMove={isValidMove}
+								isValidMove={isValidMove || isDuckTarget}
 								isCapture={isCapture}
 								isLastMove={isLastMove}
+								isDuck={isDuck}
 								pieceSet={pieceSet}
 								onClick={() => onSquareClick({row, col})}
 							/>

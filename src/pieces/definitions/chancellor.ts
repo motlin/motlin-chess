@@ -20,9 +20,9 @@ export const chancellorDefinition: PieceDefinition = {
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
-		const rookMoves = getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS);
-		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+		const rookMoves = getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS, duckPosition);
+		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS, duckPosition);
 		const seen = new Set(rookMoves.map((m) => `${m.row},${m.col}`));
 		const combined = [...rookMoves];
 		for (const move of knightMoves) {

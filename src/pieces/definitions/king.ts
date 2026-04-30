@@ -11,7 +11,7 @@ export const kingDefinition: PieceDefinition = {
 	royal: true,
 	jumper: false,
 	toggleable: false,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
-		return getStepMoves(position, board, color, boardSize, KING_OFFSETS);
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+		return getStepMoves(position, board, color, boardSize, KING_OFFSETS, duckPosition);
 	},
 };

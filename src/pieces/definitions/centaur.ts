@@ -22,9 +22,9 @@ export const centaurDefinition: PieceDefinition = {
 	royal: true,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
-		const kingMoves = getStepMoves(position, board, color, boardSize, KING_OFFSETS);
-		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+		const kingMoves = getStepMoves(position, board, color, boardSize, KING_OFFSETS, duckPosition);
+		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS, duckPosition);
 		const seen = new Set(kingMoves.map((m) => `${m.row},${m.col}`));
 		const combined = [...kingMoves];
 		for (const move of knightMoves) {

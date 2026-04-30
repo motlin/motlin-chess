@@ -87,6 +87,8 @@ describe('pawn promotion on various board sizes', () => {
 			gameStatus: 'playing',
 			enPassantTarget: null,
 			pendingPromotion: null,
+			duckPosition: null,
+			turnPhase: 'move',
 		};
 
 		const selected = selectSquare(state, {row: 1, col: 1});

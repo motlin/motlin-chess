@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS: GameSettings = {
 	enabledPieces: new Set<string>(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 	pieceSet: DEFAULT_PIECE_SET,
 	boardTheme: DEFAULT_BOARD_THEME,
+	duckChess: false,
 };
 
 export function GameProvider({children}: {readonly children: React.ReactNode}): React.JSX.Element {

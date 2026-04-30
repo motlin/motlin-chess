@@ -17,6 +17,8 @@ export function Game(): React.JSX.Element {
 					currentTurn={gameState.currentTurn}
 					moveCount={gameState.moveHistory.length}
 					gameStatus={gameState.gameStatus}
+					turnPhase={gameState.turnPhase}
+					duckChess={settings.duckChess}
 				/>
 				<Board
 					board={gameState.board}
@@ -26,6 +28,8 @@ export function Game(): React.JSX.Element {
 					lastMove={gameState.moveHistory[gameState.moveHistory.length - 1] ?? null}
 					pieceSet={settings.pieceSet}
 					boardTheme={boardTheme}
+					duckPosition={gameState.duckPosition}
+					turnPhase={gameState.turnPhase}
 					onSquareClick={onSquareClick}
 				/>
 			</div>

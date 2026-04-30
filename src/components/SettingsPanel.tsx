@@ -36,6 +36,17 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 			<h2 className="settings-title">Settings</h2>
 
 			<div className="setting-group">
+				<label className="piece-toggle">
+					<input
+						type="checkbox"
+						checked={settings.duckChess}
+						onChange={() => onSettingsChange({duckChess: !settings.duckChess})}
+					/>
+					<span>🦆 Duck Chess</span>
+				</label>
+			</div>
+
+			<div className="setting-group">
 				<label className="setting-label" htmlFor="board-size">
 					Board Size: {settings.boardSize}x{settings.boardSize}
 				</label>

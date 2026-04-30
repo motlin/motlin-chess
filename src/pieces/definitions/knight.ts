@@ -20,7 +20,7 @@ export const knightDefinition: PieceDefinition = {
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
-		return getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS);
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+		return getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS, duckPosition);
 	},
 };

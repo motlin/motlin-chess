@@ -32,12 +32,14 @@ export function getSlidingMoves(
 	color: Color,
 	boardSize: number,
 	directions: readonly Direction[],
+	duckPosition?: Position | null,
 ): Position[] {
 	const moves: Position[] = [];
 	for (const {dRow, dCol} of directions) {
 		let row = position.row + dRow;
 		let col = position.col + dCol;
 		while (isInBounds(row, col, boardSize)) {
+			if (duckPosition && row === duckPosition.row && col === duckPosition.col) break;
 			const target = board.get(row, col);
 			if (target === null) {
 				moves.push({row, col});
@@ -60,6 +62,7 @@ export function getStepMoves(
 	color: Color,
 	boardSize: number,
 	offsets: ReadonlyArray<readonly [number, number]>,
+	duckPosition?: Position | null,
 ): Position[] {
 	const moves: Position[] = [];
 	for (const [dRow, dCol] of offsets) {
@@ -68,6 +71,7 @@ export function getStepMoves(
 		if (!isInBounds(row, col, boardSize)) {
 			continue;
 		}
+		if (duckPosition && row === duckPosition.row && col === duckPosition.col) continue;
 		const target = board.get(row, col);
 		if (target === null || target.color !== color) {
 			moves.push({row, col});

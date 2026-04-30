@@ -24,7 +24,9 @@ export interface Move {
 	readonly promotion: PieceType | null;
 }
 
-export type GameStatus = 'playing' | 'check' | 'checkmate' | 'stalemate';
+export type TurnPhase = 'move' | 'placeDuck';
+
+export type GameStatus = 'playing' | 'check' | 'checkmate' | 'stalemate' | 'kingCaptured' | 'fowled';
 
 export interface GameState {
 	readonly board: Board;
@@ -36,6 +38,8 @@ export interface GameState {
 	readonly gameStatus: GameStatus;
 	readonly enPassantTarget: Position | null;
 	readonly pendingPromotion: Move | null;
+	readonly duckPosition: Position | null;
+	readonly turnPhase: TurnPhase;
 }
 
 export class Board {
@@ -71,4 +75,5 @@ export interface GameSettings {
 	readonly enabledPieces: ReadonlySet<string>;
 	readonly pieceSet: string;
 	readonly boardTheme: string;
+	readonly duckChess: boolean;
 }

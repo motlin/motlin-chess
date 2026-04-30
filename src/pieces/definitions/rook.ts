@@ -9,7 +9,7 @@ export const rookDefinition: PieceDefinition = {
 	royal: false,
 	jumper: false,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
-		return getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS);
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+		return getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS, duckPosition);
 	},
 };

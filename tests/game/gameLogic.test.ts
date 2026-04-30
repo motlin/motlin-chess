@@ -34,6 +34,7 @@ describe('createInitialGameState', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		expect(state.currentTurn).toBe('white');
 		expect(state.gameStatus).toBe('playing');
@@ -256,6 +257,7 @@ describe('selectSquare', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const newState = selectSquare(state, {row: 6, col: 4});
 		expect(newState.selectedPosition).toStrictEqual({row: 6, col: 4});
@@ -268,6 +270,7 @@ describe('selectSquare', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const newState = selectSquare(state, {row: 4, col: 4});
 		expect(newState).toBe(state);
@@ -279,6 +282,7 @@ describe('selectSquare', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const newState = selectSquare(state, {row: 1, col: 4});
 		expect(newState).toBe(state);
@@ -290,6 +294,7 @@ describe('selectSquare', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const selected = selectSquare(state, {row: 6, col: 4});
 		expect(selected.selectedPosition).toStrictEqual({row: 6, col: 4});
@@ -304,6 +309,7 @@ describe('selectSquare', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const selected = selectSquare(state, {row: 6, col: 4});
 		const moved = selectSquare(selected, {row: 4, col: 4});
@@ -329,6 +335,8 @@ describe('pawn promotion flow', () => {
 			gameStatus: 'playing',
 			enPassantTarget: null,
 			pendingPromotion: null,
+			duckPosition: null,
+			turnPhase: 'move',
 		};
 
 		const selected = selectSquare(state, {row: 1, col: 3});
@@ -353,6 +361,8 @@ describe('pawn promotion flow', () => {
 			gameStatus: 'playing',
 			enPassantTarget: null,
 			pendingPromotion: null,
+			duckPosition: null,
+			turnPhase: 'move',
 		};
 
 		const selected = selectSquare(state, {row: 1, col: 3});
@@ -487,6 +497,7 @@ describe('selectSquare edge cases', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const selected = selectSquare(state, {row: 6, col: 4});
 		expect(selected.selectedPosition).not.toBeNull();
@@ -501,6 +512,7 @@ describe('selectSquare edge cases', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const selected = selectSquare(state, {row: 6, col: 4});
 		const clickedOpponent = selectSquare(selected, {row: 1, col: 0});
@@ -522,6 +534,8 @@ describe('selectSquare edge cases', () => {
 			gameStatus: 'playing',
 			enPassantTarget: null,
 			pendingPromotion: null,
+			duckPosition: null,
+			turnPhase: 'move',
 		};
 		const selected = selectSquare(state, {row: 1, col: 3});
 		const promoted = selectSquare(selected, {row: 0, col: 3});
@@ -546,6 +560,8 @@ describe('selectSquare edge cases', () => {
 			gameStatus: 'checkmate',
 			enPassantTarget: null,
 			pendingPromotion: null,
+			duckPosition: null,
+			turnPhase: 'move',
 		};
 		const result = selectSquare(state, {row: 0, col: 0});
 		expect(result).toBe(state);
@@ -559,6 +575,7 @@ describe('completePromotion edge cases', () => {
 			enabledPieces: new Set(['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']),
 			pieceSet: 'cburnett',
 			boardTheme: 'brown',
+			duckChess: false,
 		});
 		const result = completePromotion(state, 'queen');
 		expect(result).toBe(state);

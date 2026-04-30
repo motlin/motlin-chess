@@ -14,6 +14,8 @@ export function createInitialGameState(settings: GameSettings): GameState {
 		gameStatus: 'playing',
 		enPassantTarget: null,
 		pendingPromotion: null,
+		duckPosition: null,
+		turnPhase: 'move',
 	};
 }
 
@@ -88,7 +90,12 @@ function findKing(board: Board, color: Color): Position | null {
 	return null;
 }
 
-function isSquareAttackedBy(board: Board, position: Position, attackerColor: Color): boolean {
+function isSquareAttackedBy(
+	board: Board,
+	position: Position,
+	attackerColor: Color,
+	duckPosition?: Position | null,
+): boolean {
 	for (let row = 0; row < board.size; row++) {
 		for (let col = 0; col < board.size; col++) {
 			const piece = board.get(row, col);
@@ -99,7 +106,7 @@ function isSquareAttackedBy(board: Board, position: Position, attackerColor: Col
 			if (definition === undefined) {
 				continue;
 			}
-			const moves = definition.getValidMoves({row, col}, board, piece.color, board.size, null);
+			const moves = definition.getValidMoves({row, col}, board, piece.color, board.size, null, duckPosition);
 			if (moves.some((m) => m.row === position.row && m.col === position.col)) {
 				return true;
 			}
@@ -117,7 +124,12 @@ export function isInCheck(board: Board, color: Color, _boardSize?: number): bool
 	return isSquareAttackedBy(board, kingPos, opponentColor);
 }
 
-function getRawMovesForPiece(board: Board, position: Position, enPassantTarget: Position | null): Move[] {
+function getRawMovesForPiece(
+	board: Board,
+	position: Position,
+	enPassantTarget: Position | null,
+	duckPosition?: Position | null,
+): Move[] {
 	const piece = board.get(position.row, position.col);
 	if (piece === null) {
 		return [];
@@ -128,7 +140,14 @@ function getRawMovesForPiece(board: Board, position: Position, enPassantTarget: 
 		return [];
 	}
 
-	const targetPositions = definition.getValidMoves(position, board, piece.color, board.size, enPassantTarget);
+	const targetPositions = definition.getValidMoves(
+		position,
+		board,
+		piece.color,
+		board.size,
+		enPassantTarget,
+		duckPosition,
+	);
 	const promotionRow = piece.color === 'white' ? 0 : board.size - 1;
 
 	const moves: Move[] = [];
@@ -165,14 +184,19 @@ function getRawMovesForPiece(board: Board, position: Position, enPassantTarget: 
 	return moves;
 }
 
-function getCastlingMoves(board: Board, position: Position): Move[] {
+function getCastlingMoves(
+	board: Board,
+	position: Position,
+	duckChess?: boolean,
+	duckPosition?: Position | null,
+): Move[] {
 	const piece = board.get(position.row, position.col);
 	if (piece === null || !isRoyal(piece.type) || piece.hasMoved) {
 		return [];
 	}
 
 	const opponentColor: Color = piece.color === 'white' ? 'black' : 'white';
-	if (isSquareAttackedBy(board, position, opponentColor)) {
+	if (!duckChess && isSquareAttackedBy(board, position, opponentColor)) {
 		return [];
 	}
 
@@ -197,21 +221,27 @@ function getCastlingMoves(board: Board, position: Position): Move[] {
 				pathClear = false;
 				break;
 			}
+			if (duckPosition && duckPosition.row === row && duckPosition.col === col) {
+				pathClear = false;
+				break;
+			}
 		}
 		if (!pathClear) {
 			continue;
 		}
 
-		let passesThroughCheck = false;
-		const step = direction;
-		for (let col = position.col + step; col !== kingToCol + step; col += step) {
-			if (isSquareAttackedBy(board, {row, col}, opponentColor)) {
-				passesThroughCheck = true;
-				break;
+		if (!duckChess) {
+			let passesThroughCheck = false;
+			const step = direction;
+			for (let col = position.col + step; col !== kingToCol + step; col += step) {
+				if (isSquareAttackedBy(board, {row, col}, opponentColor)) {
+					passesThroughCheck = true;
+					break;
+				}
 			}
-		}
-		if (passesThroughCheck) {
-			continue;
+			if (passesThroughCheck) {
+				continue;
+			}
 		}
 
 		moves.push({
@@ -232,16 +262,22 @@ export function getLegalMoves(
 	position: Position,
 	_boardSize: number,
 	enPassantTarget: Position | null,
+	duckChess?: boolean,
+	duckPosition?: Position | null,
 ): Move[] {
 	const piece = board.get(position.row, position.col);
 	if (piece === null) {
 		return [];
 	}
 
-	const rawMoves = getRawMovesForPiece(board, position, enPassantTarget);
+	const rawMoves = getRawMovesForPiece(board, position, enPassantTarget, duckPosition);
 
 	if (isRoyal(piece.type)) {
-		rawMoves.push(...getCastlingMoves(board, position));
+		rawMoves.push(...getCastlingMoves(board, position, duckChess, duckPosition));
+	}
+
+	if (duckChess) {
+		return rawMoves;
 	}
 
 	return rawMoves.filter((move) => {
@@ -250,14 +286,20 @@ export function getLegalMoves(
 	});
 }
 
-function hasAnyLegalMoves(board: Board, color: Color, enPassantTarget: Position | null): boolean {
+function hasAnyLegalMoves(
+	board: Board,
+	color: Color,
+	enPassantTarget: Position | null,
+	duckChess?: boolean,
+	duckPosition?: Position | null,
+): boolean {
 	for (let row = 0; row < board.size; row++) {
 		for (let col = 0; col < board.size; col++) {
 			const piece = board.get(row, col);
 			if (piece === null || piece.color !== color) {
 				continue;
 			}
-			const moves = getLegalMoves(board, {row, col}, board.size, enPassantTarget);
+			const moves = getLegalMoves(board, {row, col}, board.size, enPassantTarget, duckChess, duckPosition);
 			if (moves.length > 0) {
 				return true;
 			}
@@ -271,7 +313,19 @@ export function getGameStatus(
 	currentTurn: Color,
 	boardSize: number,
 	enPassantTarget: Position | null,
+	duckChess?: boolean,
+	duckPosition?: Position | null,
 ): GameStatus {
+	if (duckChess) {
+		if (findKing(board, 'white') === null || findKing(board, 'black') === null) {
+			return 'kingCaptured';
+		}
+		if (!hasAnyLegalMoves(board, currentTurn, enPassantTarget, true, duckPosition)) {
+			return 'fowled';
+		}
+		return 'playing';
+	}
+
 	const inCheck = isInCheck(board, currentTurn, boardSize);
 	const hasLegal = hasAnyLegalMoves(board, currentTurn, enPassantTarget);
 
@@ -296,12 +350,21 @@ function computeEnPassantTarget(move: Move, piece: Piece, boardSize: number): Po
 	return {row: behindRow, col: move.from.col};
 }
 
-export function selectSquare(state: GameState, position: Position): GameState {
-	if (state.pendingPromotion !== null) {
+export function selectSquare(state: GameState, position: Position, duckChess?: boolean): GameState {
+	if (
+		state.gameStatus === 'checkmate' ||
+		state.gameStatus === 'stalemate' ||
+		state.gameStatus === 'kingCaptured' ||
+		state.gameStatus === 'fowled'
+	) {
 		return state;
 	}
 
-	if (state.gameStatus === 'checkmate' || state.gameStatus === 'stalemate') {
+	if (duckChess && state.turnPhase === 'placeDuck') {
+		return placeDuck(state, position);
+	}
+
+	if (state.pendingPromotion !== null) {
 		return state;
 	}
 
@@ -328,11 +391,18 @@ export function selectSquare(state: GameState, position: Position): GameState {
 				};
 			}
 
-			return executeMove(state, selectedMove, selectedPiece);
+			return executeMove(state, selectedMove, selectedPiece, duckChess);
 		}
 
 		if (clickedPiece !== null && clickedPiece.color === state.currentTurn) {
-			const moves = getLegalMoves(state.board, position, state.boardSize, state.enPassantTarget);
+			const moves = getLegalMoves(
+				state.board,
+				position,
+				state.boardSize,
+				state.enPassantTarget,
+				duckChess,
+				state.duckPosition,
+			);
 			return {...state, selectedPosition: position, validMoves: moves};
 		}
 
@@ -340,14 +410,42 @@ export function selectSquare(state: GameState, position: Position): GameState {
 	}
 
 	if (clickedPiece !== null && clickedPiece.color === state.currentTurn) {
-		const moves = getLegalMoves(state.board, position, state.boardSize, state.enPassantTarget);
+		const moves = getLegalMoves(
+			state.board,
+			position,
+			state.boardSize,
+			state.enPassantTarget,
+			duckChess,
+			state.duckPosition,
+		);
 		return {...state, selectedPosition: position, validMoves: moves};
 	}
 
 	return state;
 }
 
-export function completePromotion(state: GameState, promotionType: PieceType): GameState {
+function placeDuck(state: GameState, position: Position): GameState {
+	const target = state.board.get(position.row, position.col);
+	if (target !== null) return state;
+	if (state.duckPosition && position.row === state.duckPosition.row && position.col === state.duckPosition.col) {
+		return state;
+	}
+
+	const nextTurn: Color = state.currentTurn === 'white' ? 'black' : 'white';
+	const gameStatus = getGameStatus(state.board, nextTurn, state.boardSize, state.enPassantTarget, true, position);
+
+	return {
+		...state,
+		duckPosition: position,
+		currentTurn: nextTurn,
+		turnPhase: 'move',
+		gameStatus,
+		selectedPosition: null,
+		validMoves: [],
+	};
+}
+
+export function completePromotion(state: GameState, promotionType: PieceType, duckChess?: boolean): GameState {
 	if (state.pendingPromotion === null) {
 		return state;
 	}
@@ -358,13 +456,48 @@ export function completePromotion(state: GameState, promotionType: PieceType): G
 		return {...state, pendingPromotion: null, selectedPosition: null, validMoves: []};
 	}
 
-	return executeMove({...state, pendingPromotion: null}, move, piece);
+	return executeMove({...state, pendingPromotion: null}, move, piece, duckChess);
 }
 
-function executeMove(state: GameState, move: Move, piece: Piece): GameState {
+function executeMove(state: GameState, move: Move, piece: Piece, duckChess?: boolean): GameState {
 	const newBoard = applyMove(state.board, move);
-	const nextTurn: Color = state.currentTurn === 'white' ? 'black' : 'white';
 	const enPassantTarget = computeEnPassantTarget(move, piece, state.boardSize);
+
+	if (duckChess) {
+		const kingCaptured = move.captured !== null && isRoyal(move.captured.type);
+
+		if (kingCaptured) {
+			return {
+				board: newBoard,
+				currentTurn: state.currentTurn,
+				selectedPosition: null,
+				validMoves: [],
+				moveHistory: [...state.moveHistory, move],
+				boardSize: state.boardSize,
+				gameStatus: 'kingCaptured',
+				enPassantTarget,
+				pendingPromotion: null,
+				duckPosition: state.duckPosition,
+				turnPhase: 'move',
+			};
+		}
+
+		return {
+			board: newBoard,
+			currentTurn: state.currentTurn,
+			selectedPosition: null,
+			validMoves: [],
+			moveHistory: [...state.moveHistory, move],
+			boardSize: state.boardSize,
+			gameStatus: 'playing',
+			enPassantTarget,
+			pendingPromotion: null,
+			duckPosition: state.duckPosition,
+			turnPhase: 'placeDuck',
+		};
+	}
+
+	const nextTurn: Color = state.currentTurn === 'white' ? 'black' : 'white';
 	const gameStatus = getGameStatus(newBoard, nextTurn, state.boardSize, enPassantTarget);
 
 	return {
@@ -377,6 +510,8 @@ function executeMove(state: GameState, move: Move, piece: Piece): GameState {
 		gameStatus,
 		enPassantTarget,
 		pendingPromotion: null,
+		duckPosition: state.duckPosition,
+		turnPhase: 'move',
 	};
 }
 
