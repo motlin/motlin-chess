@@ -1,0 +1,92 @@
+.move-transcript {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 1.5rem;
+	background-color: var(--bg-panel);
+	border-radius: 8px;
+	min-width: 220px;
+	position: relative;
+}
+
+.transcript-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.transcript-title {
+	margin: 0;
+	font-size: 1.25rem;
+	color: var(--text-primary);
+}
+
+.gear-button {
+	padding: 0.375rem;
+	border: none;
+	border-radius: 6px;
+	background-color: transparent;
+	color: var(--text-muted);
+	font-size: 1.25rem;
+	cursor: pointer;
+	line-height: 1;
+	transition: color 0.15s;
+}
+
+.gear-button:hover {
+	color: var(--text-primary);
+}
+
+.gear-button-active {
+	color: var(--accent);
+}
+
+.settings-popover {
+	position: absolute;
+	top: 3.5rem;
+	right: 0;
+	z-index: 100;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.move-list {
+	display: grid;
+	grid-template-columns: auto 1fr 1fr;
+	gap: 0.125rem 0.5rem;
+	max-height: 360px;
+	overflow-y: auto;
+	font-size: 0.8rem;
+	font-family: monospace;
+	color: var(--text-primary);
+}
+
+.move-number {
+	color: var(--text-muted);
+	text-align: right;
+}
+
+.move-san {
+	padding: 0.125rem 0.25rem;
+	border-radius: 3px;
+}
+
+.copy-button {
+	padding: 0.625rem 1rem;
+	border: none;
+	border-radius: 6px;
+	background-color: #3a3835;
+	color: var(--text-primary);
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.15s;
+}
+
+.copy-button:hover {
+	background-color: #4a4845;
+}
+
+.copy-button-copied {
+	background-color: var(--accent);
+	color: white;
+}
