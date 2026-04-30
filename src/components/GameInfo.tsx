@@ -7,6 +7,10 @@ interface GameInfoProps {
 	readonly gameStatus: GameStatus;
 	readonly turnPhase: TurnPhase;
 	readonly duckChess: boolean;
+	readonly canUndo: boolean;
+	readonly canRedo: boolean;
+	readonly onUndo: () => void;
+	readonly onRedo: () => void;
 }
 
 function getStatusText(gameStatus: GameStatus, currentTurn: Color, turnPhase: TurnPhase, duckChess: boolean): string {
@@ -37,11 +41,41 @@ function getStatusText(gameStatus: GameStatus, currentTurn: Color, turnPhase: Tu
 	}
 }
 
-export function GameInfo({currentTurn, moveCount, gameStatus, turnPhase, duckChess}: GameInfoProps): React.JSX.Element {
+export function GameInfo({
+	currentTurn,
+	moveCount,
+	gameStatus,
+	turnPhase,
+	duckChess,
+	canUndo,
+	canRedo,
+	onUndo,
+	onRedo,
+}: GameInfoProps): React.JSX.Element {
 	return (
 		<div className="game-info">
 			<div className={`status status-${gameStatus}`}>
 				{getStatusText(gameStatus, currentTurn, turnPhase, duckChess)}
+			</div>
+			<div className="game-controls">
+				<button
+					type="button"
+					className="control-button"
+					disabled={!canUndo}
+					title="Undo (Ctrl+Z)"
+					onClick={onUndo}
+				>
+					&#x2190;
+				</button>
+				<button
+					type="button"
+					className="control-button"
+					disabled={!canRedo}
+					title="Redo (Ctrl+Shift+Z)"
+					onClick={onRedo}
+				>
+					&#x2192;
+				</button>
 			</div>
 			<div className="move-count">Moves: {moveCount}</div>
 		</div>

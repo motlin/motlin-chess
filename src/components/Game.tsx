@@ -7,7 +7,18 @@ import {SettingsPanel} from './SettingsPanel.js';
 import './Game.css';
 
 export function Game(): React.JSX.Element {
-	const {gameState, settings, onSquareClick, onPromotionSelect, updateSettings, resetGame} = useGame();
+	const {
+		gameState,
+		settings,
+		onSquareClick,
+		onPromotionSelect,
+		updateSettings,
+		resetGame,
+		undo,
+		redo,
+		canUndo,
+		canRedo,
+	} = useGame();
 	const boardTheme = getBoardTheme(settings.boardTheme);
 
 	return (
@@ -19,6 +30,10 @@ export function Game(): React.JSX.Element {
 					gameStatus={gameState.gameStatus}
 					turnPhase={gameState.turnPhase}
 					duckChess={settings.duckChess}
+					canUndo={canUndo}
+					canRedo={canRedo}
+					onUndo={undo}
+					onRedo={redo}
 				/>
 				<Board
 					board={gameState.board}
