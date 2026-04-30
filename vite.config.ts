@@ -231,7 +231,8 @@ export default defineConfig({
 		sourcemap: true,
 	},
 	server: {
-		port: 3000,
+		host: true,
+		port: 715,
 		allowedHosts: process.env['VITE_ALLOWED_HOSTS']?.split(',') ?? [],
 	},
 });
