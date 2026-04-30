@@ -8,6 +8,10 @@ export interface GameContextValue {
 	readonly onPromotionSelect: (pieceType: PieceType) => void;
 	readonly updateSettings: (update: Partial<GameSettings>) => void;
 	readonly resetGame: () => void;
+	readonly undo: () => void;
+	readonly redo: () => void;
+	readonly canUndo: boolean;
+	readonly canRedo: boolean;
 }
 
 export const GameContext = createContext<GameContextValue | null>(null);
