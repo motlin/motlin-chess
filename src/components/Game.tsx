@@ -48,7 +48,12 @@ export function Game(): React.JSX.Element {
 					onSquareClick={onSquareClick}
 				/>
 			</div>
-			<SettingsPanel settings={settings} onSettingsChange={updateSettings} onReset={resetGame} />
+			<SettingsPanel
+				settings={settings}
+				onSettingsChange={updateSettings}
+				onReset={resetGame}
+				onImport={() => {}}
+			/>
 			{gameState.pendingPromotion !== null && (
 				<PromotionDialog
 					color={gameState.currentTurn}

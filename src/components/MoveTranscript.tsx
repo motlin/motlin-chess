@@ -11,6 +11,7 @@ interface MoveTranscriptProps {
 	readonly moveHistory: readonly Move[];
 	readonly onSettingsChange: (update: Partial<GameSettings>) => void;
 	readonly onReset: () => void;
+	readonly onImport: (pgn: string) => void;
 }
 
 export function MoveTranscript({
@@ -20,6 +21,7 @@ export function MoveTranscript({
 	moveHistory,
 	onSettingsChange,
 	onReset,
+	onImport,
 }: MoveTranscriptProps): React.JSX.Element {
 	const [showSettings, setShowSettings] = useState(false);
 	const [copied, setCopied] = useState(false);
@@ -87,7 +89,12 @@ export function MoveTranscript({
 
 			{showSettings && (
 				<div ref={popoverRef} className="settings-popover">
-					<SettingsPanel settings={settings} onSettingsChange={onSettingsChange} onReset={onReset} />
+					<SettingsPanel
+						settings={settings}
+						onSettingsChange={onSettingsChange}
+						onReset={onReset}
+						onImport={onImport}
+					/>
 				</div>
 			)}
 

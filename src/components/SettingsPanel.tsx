@@ -1,3 +1,4 @@
+import {useState, useRef} from 'react';
 import type {GameSettings} from '../types.js';
 import {getPieceDefinition, getToggleablePieceTypes} from '../pieces/registry.js';
 import {BOARD_THEMES, PIECE_SETS, getPieceImagePath} from '../themes.js';
@@ -8,17 +9,53 @@ interface SettingsPanelProps {
 	readonly settings: GameSettings;
 	readonly onSettingsChange: (update: Partial<GameSettings>) => void;
 	readonly onReset: () => void;
+	readonly onImport: (pgn: string) => void;
 }
 
-export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPanelProps): React.JSX.Element {
+export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: SettingsPanelProps): React.JSX.Element {
 	const toggleablePieces = getToggleablePieceTypes();
 	const backRank = buildBackRank(settings.enabledPieces, settings.boardSize);
+	const [pgnText, setPgnText] = useState('');
+	const [importError, setImportError] = useState<string>('');
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
 		const size = Number(event.target.value) * 2;
 		if (size >= 4 && size <= 16) {
 			onSettingsChange({boardSize: size});
 		}
+	}
+
+	function handleImport(text: string): void {
+		const trimmed = text.trim();
+		if (trimmed === '') {
+			setImportError('Please enter PGN text.');
+			return;
+		}
+		try {
+			onImport(trimmed);
+			setImportError('');
+			setPgnText('');
+		} catch (error) {
+			setImportError(error instanceof Error ? error.message : 'Failed to import PGN.');
+		}
+	}
+
+	function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>): void {
+		const file = event.target.files?.[0];
+		if (file === undefined) {
+			return;
+		}
+		const reader = new FileReader();
+		reader.onload = (readEvent) => {
+			const content = readEvent.target?.result;
+			if (typeof content === 'string') {
+				setPgnText(content);
+				handleImport(content);
+			}
+		};
+		reader.readAsText(file);
+		event.target.value = '';
 	}
 
 	function handlePieceToggle(pieceType: string): void {
@@ -135,6 +172,40 @@ export function SettingsPanel({settings, onSettingsChange, onReset}: SettingsPan
 						/>
 					))}
 				</div>
+			</div>
+
+			<div className="setting-group">
+				<h3 className="setting-label">Import PGN</h3>
+				<textarea
+					className="pgn-textarea"
+					placeholder="Paste PGN text here..."
+					value={pgnText}
+					onChange={(e) => {
+						setPgnText(e.target.value);
+						setImportError('');
+					}}
+					rows={4}
+				/>
+				<div className="import-buttons">
+					<button type="button" className="reset-button import-button" onClick={() => handleImport(pgnText)}>
+						Load
+					</button>
+					<button
+						type="button"
+						className="reset-button import-button"
+						onClick={() => fileInputRef.current?.click()}
+					>
+						Upload .pgn
+					</button>
+					<input
+						ref={fileInputRef}
+						type="file"
+						accept=".pgn"
+						className="file-input-hidden"
+						onChange={handleFileUpload}
+					/>
+				</div>
+				{importError !== '' && <p className="validation-error">{importError}</p>}
 			</div>
 
 			<button type="button" className="reset-button" onClick={onReset}>

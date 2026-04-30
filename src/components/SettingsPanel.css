@@ -118,6 +118,37 @@
 	line-height: 1.3;
 }
 
+.pgn-textarea {
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #555;
+	border-radius: 4px;
+	background-color: #3a3835;
+	color: var(--text-primary);
+	font-family: monospace;
+	font-size: 0.8rem;
+	resize: vertical;
+}
+
+.pgn-textarea::placeholder {
+	color: var(--text-muted);
+}
+
+.import-buttons {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.import-button {
+	flex: 1;
+	font-size: 0.8rem;
+	padding: 0.5rem 0.75rem;
+}
+
+.file-input-hidden {
+	display: none;
+}
+
 .reset-button {
 	padding: 0.625rem 1rem;
 	border: none;
