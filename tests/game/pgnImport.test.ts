@@ -222,4 +222,19 @@ describe('importPgn', () => {
 		expect(state.moveHistory).toHaveLength(0);
 		expect(state.gameStatus).toBe('playing');
 	});
+
+	test('imports game on 6x6 board', () => {
+		const settings6x6: GameSettings = {
+			boardSize: 6,
+			enabledPieces: standardPieces,
+			pieceSet: 'cburnett',
+			boardTheme: 'brown',
+			duckChess: false,
+		};
+		const pgn = '1. c4 d3 2. e4 f3';
+		const state = importPgn(pgn, settings6x6);
+		expect(state.moveHistory).toHaveLength(4);
+		expect(state.boardSize).toBe(6);
+		expect(state.currentTurn).toBe('white');
+	});
 });

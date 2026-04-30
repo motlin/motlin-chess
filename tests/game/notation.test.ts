@@ -443,6 +443,40 @@ describe('moveToSan with fairy pieces', () => {
 		};
 		expect(moveToSan(board, move, 8, null, 'playing')).toBe('Ud3');
 	});
+
+	test('centaur kingside castling', () => {
+		let board = emptyBoard(8);
+		const wCentaur: Piece = {type: 'centaur', color: 'white', hasMoved: false};
+		board = board.withPiece(7, 4, wCentaur);
+		board = board.withPiece(7, 7, wRook);
+		board = board.withPiece(0, 4, bKing);
+		const move: Move = {
+			from: {row: 7, col: 4},
+			to: {row: 7, col: 6},
+			captured: null,
+			isEnPassant: false,
+			isCastle: true,
+			promotion: null,
+		};
+		expect(moveToSan(board, move, 8, null, 'playing')).toBe('O-O');
+	});
+
+	test('centaur queenside castling', () => {
+		let board = emptyBoard(8);
+		const wCentaur: Piece = {type: 'centaur', color: 'white', hasMoved: false};
+		board = board.withPiece(7, 4, wCentaur);
+		board = board.withPiece(7, 0, wRook);
+		board = board.withPiece(0, 4, bKing);
+		const move: Move = {
+			from: {row: 7, col: 4},
+			to: {row: 7, col: 2},
+			captured: null,
+			isEnPassant: false,
+			isCastle: true,
+			promotion: null,
+		};
+		expect(moveToSan(board, move, 8, null, 'playing')).toBe('O-O-O');
+	});
 });
 
 describe('generateMoveNotations', () => {

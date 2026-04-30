@@ -8,6 +8,7 @@ export interface GameContextValue {
 	readonly onPromotionSelect: (pieceType: PieceType) => void;
 	readonly updateSettings: (update: Partial<GameSettings>) => void;
 	readonly resetGame: () => void;
+	readonly importGame: (pgn: string) => void;
 	readonly undo: () => void;
 	readonly redo: () => void;
 	readonly canUndo: boolean;

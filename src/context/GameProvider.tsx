@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 import type {GameSettings, GameState, PieceType, Position} from '../types.js';
 import {completePromotion, createInitialGameState, selectSquare} from '../game/gameLogic.js';
+import {importPgn} from '../game/pgnImport.js';
 import {DEFAULT_BOARD_THEME, DEFAULT_PIECE_SET} from '../themes.js';
 import {GameContext} from './GameContext.js';
 
@@ -132,6 +133,14 @@ export function GameProvider({children}: {readonly children: React.ReactNode}): 
 		setHistory({states: [newInitialState], currentIndex: 0});
 	}, [settings]);
 
+	const importGame = useCallback(
+		(pgn: string) => {
+			const importedState = importPgn(pgn, settings);
+			setHistory({states: [importedState], currentIndex: 0});
+		},
+		[settings],
+	);
+
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent): void {
 			const modifierKey = event.metaKey || event.ctrlKey;
@@ -163,6 +172,7 @@ export function GameProvider({children}: {readonly children: React.ReactNode}): 
 				onPromotionSelect,
 				updateSettings,
 				resetGame,
+				importGame,
 				undo,
 				redo,
 				canUndo,
