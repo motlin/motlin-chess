@@ -335,7 +335,7 @@ export function getGameStatus(
 	return inCheck ? 'check' : 'playing';
 }
 
-function computeEnPassantTarget(move: Move, piece: Piece, boardSize: number): Position | null {
+export function computeEnPassantTarget(move: Move, piece: Piece, boardSize: number): Position | null {
 	if (piece.type !== 'pawn') {
 		return null;
 	}
