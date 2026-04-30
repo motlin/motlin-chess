@@ -1,4 +1,4 @@
-import {GameProvider} from './context/GameContext.js';
+import {GameProvider} from './context/GameProvider.js';
 import {Game} from './components/Game.js';
 import './App.css';
 

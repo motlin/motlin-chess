@@ -1,18 +1,8 @@
-import {createContext, useCallback, useContext, useState} from 'react';
+import {useCallback, useState} from 'react';
 import type {GameSettings, GameState, PieceType, Position} from '../types.js';
 import {completePromotion, createInitialGameState, selectSquare} from '../game/gameLogic.js';
 import {DEFAULT_BOARD_THEME, DEFAULT_PIECE_SET} from '../themes.js';
-
-interface GameContextValue {
-	readonly gameState: GameState;
-	readonly settings: GameSettings;
-	readonly onSquareClick: (position: Position) => void;
-	readonly onPromotionSelect: (pieceType: PieceType) => void;
-	readonly updateSettings: (update: Partial<GameSettings>) => void;
-	readonly resetGame: () => void;
-}
-
-const GameContext = createContext<GameContextValue | null>(null);
+import {GameContext} from './GameContext.js';
 
 const DEFAULT_SETTINGS: GameSettings = {
 	boardSize: 8,
@@ -52,12 +42,4 @@ export function GameProvider({children}: {readonly children: React.ReactNode}): 
 			{children}
 		</GameContext>
 	);
-}
-
-export function useGame(): GameContextValue {
-	const context = useContext(GameContext);
-	if (context === null) {
-		throw new Error('useGame must be used within a GameProvider');
-	}
-	return context;
 }

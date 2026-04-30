@@ -1,4 +1,4 @@
-import {useGame} from '../context/GameContext.js';
+import {useGame} from '../context/useGame.js';
 import {getBoardTheme} from '../themes.js';
 import {Board} from './Board.js';
 import {GameInfo} from './GameInfo.js';
