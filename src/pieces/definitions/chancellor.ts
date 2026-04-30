@@ -14,6 +14,7 @@ const KNIGHT_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 
 export const chancellorDefinition: PieceDefinition = {
 	name: 'Chancellor',
+	notation: 'C',
 	symbols: {white: 'C', black: 'c'},
 	isStandard: false,
 	count: 2,

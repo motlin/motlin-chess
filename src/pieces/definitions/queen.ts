@@ -3,6 +3,7 @@ import {ALL_DIRECTIONS, getSlidingMoves} from '../moveHelpers.js';
 
 export const queenDefinition: PieceDefinition = {
 	name: 'Queen',
+	notation: 'Q',
 	symbols: {white: '♕', black: '♛'},
 	isStandard: true,
 	count: 1,

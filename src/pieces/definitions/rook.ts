@@ -3,6 +3,7 @@ import {CARDINAL_DIRECTIONS, getSlidingMoves} from '../moveHelpers.js';
 
 export const rookDefinition: PieceDefinition = {
 	name: 'Rook',
+	notation: 'R',
 	symbols: {white: '♖', black: '♜'},
 	isStandard: true,
 	count: 2,

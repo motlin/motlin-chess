@@ -16,6 +16,7 @@ const KNIGHT_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 
 export const centaurDefinition: PieceDefinition = {
 	name: 'Centaur',
+	notation: 'U',
 	symbols: {white: 'U', black: 'u'},
 	isStandard: false,
 	count: 1,

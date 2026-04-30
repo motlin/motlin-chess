@@ -14,6 +14,7 @@ const KNIGHT_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 
 export const knightDefinition: PieceDefinition = {
 	name: 'Knight',
+	notation: 'N',
 	symbols: {white: '♘', black: '♞'},
 	isStandard: true,
 	count: 2,

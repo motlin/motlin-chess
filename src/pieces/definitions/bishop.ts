@@ -3,6 +3,7 @@ import {DIAGONAL_DIRECTIONS, getSlidingMoves} from '../moveHelpers.js';
 
 export const bishopDefinition: PieceDefinition = {
 	name: 'Bishop',
+	notation: 'B',
 	symbols: {white: '♗', black: '♝'},
 	isStandard: true,
 	count: 2,

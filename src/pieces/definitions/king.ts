@@ -5,6 +5,7 @@ const KING_OFFSETS = ALL_DIRECTIONS.map((d) => [d.dRow, d.dCol] as const);
 
 export const kingDefinition: PieceDefinition = {
 	name: 'King',
+	notation: 'K',
 	symbols: {white: '♔', black: '♚'},
 	isStandard: true,
 	count: 1,

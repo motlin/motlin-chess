@@ -58,6 +58,7 @@ function getPawnMoves(
 
 export const pawnDefinition: PieceDefinition = {
 	name: 'Pawn',
+	notation: '',
 	symbols: {white: '♙', black: '♟'},
 	isStandard: true,
 	count: 2,
