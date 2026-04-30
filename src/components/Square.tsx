@@ -11,6 +11,8 @@ interface SquareProps {
 	readonly isLastMove: boolean;
 	readonly isDuck: boolean;
 	readonly pieceSet: string;
+	readonly rankLabel: string | null;
+	readonly fileLabel: string | null;
 	readonly onClick: () => void;
 }
 
@@ -23,6 +25,8 @@ export function Square({
 	isLastMove,
 	isDuck,
 	pieceSet,
+	rankLabel,
+	fileLabel,
 	onClick,
 }: SquareProps): React.JSX.Element {
 	const classes = [
@@ -37,8 +41,12 @@ export function Square({
 		.filter(Boolean)
 		.join(' ');
 
+	const coordColor = isLight ? 'coord-dark' : 'coord-light';
+
 	return (
 		<button type="button" className={classes} onClick={onClick}>
+			{rankLabel !== null && <span className={`coord coord-rank ${coordColor}`}>{rankLabel}</span>}
+			{fileLabel !== null && <span className={`coord coord-file ${coordColor}`}>{fileLabel}</span>}
 			{isDuck && <img src="/pieces/duck.svg" alt="Duck" className="piece" draggable={false} />}
 			{piece !== null && !isDuck && <PieceDisplay piece={piece} pieceSet={pieceSet} />}
 			{isValidMove && piece === null && !isDuck && <span className="move-indicator" />}

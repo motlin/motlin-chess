@@ -37,11 +37,6 @@ export function Board({
 		lastMove !== null ? [`${lastMove.from.row},${lastMove.from.col}`, `${lastMove.to.row},${lastMove.to.col}`] : [],
 	);
 
-	const fileLabels: string[] = [];
-	for (let col = 0; col < boardSize; col++) {
-		fileLabels.push(String.fromCharCode(97 + col));
-	}
-
 	const maxSquarePx = 72;
 	const maxBoardPx = boardSize * maxSquarePx;
 	const dimension = `min(calc(100vw - 340px), calc(100vh - 220px), ${maxBoardPx}px)`;
@@ -71,6 +66,9 @@ export function Board({
 						const isDuck = duckPosition !== null && duckPosition.row === row && duckPosition.col === col;
 						const isDuckTarget = turnPhase === 'placeDuck' && piece === null && !isDuck;
 
+						const rankLabel = col === 0 ? String(boardSize - row) : null;
+						const fileLabel = row === boardSize - 1 ? String.fromCharCode(97 + col) : null;
+
 						return (
 							<Square
 								key={key}
@@ -82,18 +80,13 @@ export function Board({
 								isLastMove={isLastMove}
 								isDuck={isDuck}
 								pieceSet={pieceSet}
+								rankLabel={rankLabel}
+								fileLabel={fileLabel}
 								onClick={() => onSquareClick({row, col})}
 							/>
 						);
 					}),
 				)}
-			</div>
-			<div className="file-labels" style={{gridTemplateColumns: `repeat(${boardSize}, 1fr)`, width: dimension}}>
-				{fileLabels.map((label) => (
-					<span key={label} className="file-label">
-						{label}
-					</span>
-				))}
 			</div>
 		</div>
 	);

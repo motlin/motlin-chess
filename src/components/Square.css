@@ -57,3 +57,30 @@
 .square:hover {
 	filter: brightness(1.1);
 }
+
+.coord {
+	position: absolute;
+	font-size: 0.7em;
+	font-weight: 700;
+	line-height: 1;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.coord-rank {
+	top: 3%;
+	left: 5%;
+}
+
+.coord-file {
+	bottom: 3%;
+	right: 5%;
+}
+
+.coord-light {
+	color: var(--board-light);
+}
+
+.coord-dark {
+	color: var(--board-dark);
+}

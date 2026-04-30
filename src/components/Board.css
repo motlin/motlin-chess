@@ -11,15 +11,3 @@
 	height: var(--board-dimension);
 	border: 2px solid var(--board-border);
 }
-
-.file-labels {
-	display: grid;
-	width: var(--board-dimension);
-}
-
-.file-label {
-	text-align: center;
-	font-size: 0.75rem;
-	color: var(--text-muted);
-	padding-top: 2px;
-}
