@@ -6,11 +6,11 @@ on:
             - main
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
 jobs:
-    install-and-build:
+    deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
@@ -22,3 +22,11 @@ jobs:
                   path: ~/.local/share/pnpm/store
                   key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
             - run: just build
+
+            - name: Deploy to Cloudflare Pages
+              uses: cloudflare/wrangler-action@v3
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  packageManager: pnpm
+                  command: pages deploy dist --project-name=motlin-chess --branch=main
