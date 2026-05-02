@@ -2,6 +2,7 @@ import type {PieceType} from '../types.js';
 import type {PieceDefinition} from './PieceDefinition.js';
 import {archbishopDefinition} from './definitions/archbishop.js';
 import {bishopDefinition} from './definitions/bishop.js';
+import {camelDefinition} from './definitions/camel.js';
 import {centaurDefinition} from './definitions/centaur.js';
 import {chancellorDefinition} from './definitions/chancellor.js';
 import {kingDefinition} from './definitions/king.js';
@@ -18,6 +19,7 @@ const pieceRegistry = new Map<PieceType, PieceDefinition>([
 	['knight', knightDefinition],
 	['pawn', pawnDefinition],
 	['archbishop', archbishopDefinition],
+	['camel', camelDefinition],
 	['chancellor', chancellorDefinition],
 	['centaur', centaurDefinition],
 ]);

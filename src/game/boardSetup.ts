@@ -27,6 +27,9 @@ function buildFullBackRank(enabledPieces: ReadonlySet<string>): readonly PieceTy
 	if (has('knight')) {
 		rightHalf.push('knight');
 	}
+	if (has('camel')) {
+		rightHalf.push('camel');
+	}
 	if (has('chancellor')) {
 		rightHalf.push('chancellor');
 	}
@@ -46,7 +49,7 @@ function buildFullBackRank(enabledPieces: ReadonlySet<string>): readonly PieceTy
 	return fullRank;
 }
 
-const REMOVAL_ORDER: readonly string[] = ['knight', 'chancellor', 'archbishop', 'queen', 'bishop', 'rook'];
+const REMOVAL_ORDER: readonly string[] = ['camel', 'knight', 'chancellor', 'archbishop', 'queen', 'bishop', 'rook'];
 
 function trimToFit(rank: readonly PieceType[], boardSize: number): readonly PieceType[] {
 	if (rank.length <= boardSize) {

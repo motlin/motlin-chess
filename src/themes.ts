@@ -163,6 +163,7 @@ export function getPieceImagePath(pieceSet: string, color: 'white' | 'black', pi
 		knight: 'N',
 		pawn: 'P',
 		archbishop: 'A',
+		camel: 'L',
 		chancellor: 'C',
 		centaur: 'U',
 	};
