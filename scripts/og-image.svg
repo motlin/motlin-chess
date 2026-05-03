@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+	<defs>
+		<pattern id="board" x="0" y="0" width="300" height="300" patternUnits="userSpaceOnUse">
+			<rect width="150" height="150" fill="#f0d9b5" />
+			<rect x="150" width="150" height="150" fill="#b58863" />
+			<rect y="150" width="150" height="150" fill="#b58863" />
+			<rect x="150" y="150" width="150" height="150" fill="#f0d9b5" />
+		</pattern>
+		<filter id="pieceShadow" x="-20%" y="-20%" width="140%" height="140%">
+			<feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.45" />
+		</filter>
+	</defs>
+
+	<rect width="1200" height="630" fill="url(#board)" />
+	<rect width="1200" height="630" fill="#000" opacity="0.22" />
+
+	<image href="../public/pieces/cburnett/wU.svg" x="15" y="190" width="280" height="280" filter="url(#pieceShadow)" />
+	<image href="../public/pieces/cburnett/bL.svg" x="905" y="190" width="280" height="280" filter="url(#pieceShadow)" />
+
+	<rect x="280" y="215" width="640" height="200" rx="22" fill="#ffffff" opacity="0.94" />
+	<rect x="280" y="215" width="640" height="200" rx="22" fill="none" stroke="#1a1a1a" stroke-width="3" />
+
+	<text x="600" y="310" text-anchor="middle" font-family="-apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="900" font-size="84" fill="#1a1a1a" letter-spacing="-2">Motlin Chess</text>
+	<text x="600" y="370" text-anchor="middle" font-family="-apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-style="italic" font-size="30" fill="#5a5a5a">Customizable chess with extra pieces</text>
+</svg>
