@@ -1,4 +1,5 @@
-:root {
+:root,
+[data-theme='dark'] {
 	--board-light: #f0d9b5;
 	--board-dark: #b58863;
 	--board-border: #8b7355;
@@ -9,11 +10,41 @@
 	--text-muted: #999;
 	--bg-primary: #312e2b;
 	--bg-panel: #272522;
+	--bg-input: #3a3835;
+	--bg-input-hover: #4a4845;
+	--border-input: #555;
+	--badge-bg: #555;
+	--badge-text: #ccc;
 	--accent: #769656;
 	--accent-hover: #8aad6a;
 	--status-check: #ffa500;
 	--status-checkmate: #ff4444;
 	--status-stalemate: #8888ff;
+	--square-last-move-light: #f0e4a8;
+	--square-last-move-dark: #c4a836;
+}
+
+[data-theme='light'] {
+	--board-light: #f0d9b5;
+	--board-dark: #b58863;
+	--board-border: #8b7355;
+	--square-selected: rgba(255, 215, 0, 0.55);
+	--square-valid-move: rgba(0, 0, 0, 0.18);
+	--square-capture: rgba(220, 38, 38, 0.55);
+	--text-primary: #1f1d1b;
+	--text-muted: #6b6b6b;
+	--bg-primary: #f5f0e8;
+	--bg-panel: #ffffff;
+	--bg-input: #ffffff;
+	--bg-input-hover: #ece6da;
+	--border-input: #c8c0b0;
+	--badge-bg: #d8d0c0;
+	--badge-text: #555;
+	--accent: #5a7a3e;
+	--accent-hover: #4a6a32;
+	--status-check: #b86e00;
+	--status-checkmate: #c01818;
+	--status-stalemate: #4848aa;
 	--square-last-move-light: #f0e4a8;
 	--square-last-move-dark: #c4a836;
 }

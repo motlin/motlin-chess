@@ -3,6 +3,7 @@ import type {GameSettings} from '../types.js';
 import {getPieceDefinition, getToggleablePieceTypes} from '../pieces/registry.js';
 import {BOARD_THEMES, PIECE_SETS, getPieceImagePath} from '../themes.js';
 import {buildBackRank} from '../game/boardSetup.js';
+import {ThemePicker} from './ThemePicker.js';
 import './SettingsPanel.css';
 
 interface SettingsPanelProps {
@@ -71,6 +72,11 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 	return (
 		<div className="settings-panel">
 			<h2 className="settings-title">Settings</h2>
+
+			<div className="setting-group">
+				<span className="setting-label">Appearance</span>
+				<ThemePicker />
+			</div>
 
 			<div className="setting-group">
 				<label className="piece-toggle">
