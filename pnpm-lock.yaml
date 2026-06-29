@@ -83,8 +83,8 @@ importers:
         specifier: ^29.1.1
         version: 29.1.1
       playwright:
-        specifier: ^1.61.0
-        version: 1.61.0
+        specifier: ^1.61.1
+        version: 1.61.1
       storybook:
         specifier: ^10.4.6
         version: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite-plus@0.2.1(@types/node@26.0.1)(@vitest/coverage-v8@4.1.9(@vitest/browser@4.1.9)(@voidzero-dev/vite-plus-test@0.1.24))(@voidzero-dev/vite-plus-core@0.2.1(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(typescript@6.0.2))(esbuild@0.28.1)(jiti@2.7.0)(jsdom@29.1.1)(typescript@6.0.2))
@@ -3890,13 +3890,13 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright-core@1.61.0:
-    resolution: {integrity: sha512-caX7TrY3Ml6egyDX0WUcTHDxodl/b51y5wJOdCEA36QviK/s2g081hvmGs8eaE3DWb6NYZQ6BjO/QkNRPenoPA==}
+  playwright-core@1.61.1:
+    resolution: {integrity: sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.61.0:
-    resolution: {integrity: sha512-Z+7BeeqQPRRzklHsVFP4KTGIyMxKUmfeRA4WisM6G3/XW6nwGeX6fX9qYaDa+CiUqpOkb2f6X3nar05R3kSuJQ==}
+  playwright@1.61.1:
+    resolution: {integrity: sha512-DWnY5o3YbLWK4GovuAVwpqL+1VwGNdUGrRr++8j8PtQQzvAVZUIMjKQ90fY689sEJZJBbZVw1rXaOKSTitkzPQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -5909,7 +5909,7 @@ snapshots:
       jest-serializer-html: 7.1.0
       jest-watch-typeahead: 3.0.1(jest@30.4.2(@types/node@26.0.1)(esbuild-register@3.6.0(esbuild@0.28.1)))
       nyc: 15.1.0
-      playwright: 1.61.0
+      playwright: 1.61.1
       playwright-core: 1.60.0
       rimraf: 3.0.2
       storybook: 10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@3.8.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite-plus@0.2.1(@types/node@26.0.1)(@vitest/coverage-v8@4.1.9(@vitest/browser@4.1.9)(@voidzero-dev/vite-plus-test@0.1.24))(@voidzero-dev/vite-plus-core@0.2.1(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(typescript@6.0.2))(esbuild@0.28.1)(jiti@2.7.0)(jsdom@29.1.1)(typescript@6.0.2))
@@ -8228,11 +8228,11 @@ snapshots:
 
   playwright-core@1.60.0: {}
 
-  playwright-core@1.61.0: {}
+  playwright-core@1.61.1: {}
 
-  playwright@1.61.0:
+  playwright@1.61.1:
     dependencies:
-      playwright-core: 1.61.0
+      playwright-core: 1.61.1
     optionalDependencies:
       fsevents: 2.3.2
 
