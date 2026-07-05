@@ -10,6 +10,7 @@ export default mergeConfig(
 			execArgv: ['--no-experimental-webstorage'],
 			globals: true,
 			environment: 'node',
+			setupFiles: ['./vitest.setup.ts'],
 		},
 	}),
 );
