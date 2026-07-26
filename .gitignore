@@ -28,6 +28,7 @@ src/routeTree.gen.*
 .envrc
 eslint_report.json
 /.vite/
+/.vite-hooks/
 
 # Local documentation and context
 .llm/

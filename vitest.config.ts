@@ -7,6 +7,7 @@ export default mergeConfig(
 	viteConfig,
 	defineConfig({
 		test: {
+			execArgv: ['--no-experimental-webstorage'],
 			globals: true,
 			environment: 'node',
 		},
