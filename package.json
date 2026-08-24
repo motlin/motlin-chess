@@ -41,7 +41,7 @@
 		"@vitejs/plugin-react": "^6.0.3",
 		"@vitest/coverage-v8": "^4.1.9",
 		"eslint": "^10.6.0",
-		"eslint-plugin-storybook": "^10.4.6",
+		"eslint-plugin-storybook": "^10.5.10",
 		"jiti": "^2.7.0",
 		"jsdom": "^29.1.1",
 		"playwright": "^1.61.1",
