@@ -1,9 +1,9 @@
 <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="45" height="45">
 	<title>Chess_Adt45_Amazon</title>
 	<style>
-		.s0 { fill: #000000;stroke: #000000;stroke-linecap: round;stroke-linejoin: round;stroke-width: 1.1 } 
-		.s1 { fill: #ffffff } 
-		.s2 { fill: #000000;stroke: #ffffff;stroke-linecap: round;stroke-linejoin: round;stroke-width: 1.1 } 
+		.s0 { fill: #000000;stroke: #000000;stroke-linecap: round;stroke-linejoin: round;stroke-width: 1.1 }
+		.s1 { fill: #ffffff }
+		.s2 { fill: #000000;stroke: #ffffff;stroke-linecap: round;stroke-linejoin: round;stroke-width: 1.1 }
 	</style>
 	<g id="Folder 1">
 		<g id="g4">
