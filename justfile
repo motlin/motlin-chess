@@ -13,7 +13,7 @@ install:
 
 # Run dev server
 dev *args: install
-    vp dev {{args}}
+    vp dev {{ args }}
 
 # Run linter
 lint: install
@@ -21,6 +21,7 @@ lint: install
 
 # Run formatter
 format: install
+    pre-commit run just-fmt --all-files
     vp fmt {{ if ci != "" { "--check" } else { "" } }}
 
 # Run checks (format + lint + typecheck)
@@ -30,7 +31,7 @@ check: install
 # Run tests
 test *args: install
     {{ if ci != "" { "vp exec playwright install --with-deps chromium" } else { "true" } }}
-    vp run test:run {{args}}
+    vp run test:run {{ args }}
 
 # Type-check the project
 typecheck: install
@@ -42,7 +43,7 @@ build: install
 
 # Run Storybook
 storybook *args: install
-    vp run storybook {{args}}
+    vp run storybook {{ args }}
 
 # Run all pre-commit checks
 [arg("quick", long, value="true", help="Skip tests")]
