@@ -7,13 +7,24 @@
 // globalThis.jsdom -- so tests that opt into the jsdom environment can use the
 // Storage globals. For node-environment tests globalThis.jsdom is undefined and
 // this setup is a no-op.
-const dom = (globalThis as {jsdom?: {window: Window & typeof globalThis}}).jsdom;
-if (dom?.window) {
-	if (typeof globalThis.localStorage === 'undefined') {
+const dom = (
+	globalThis as
+	{
+		jsdom?:
+		{
+			window: Window & typeof globalThis;
+		};
+	}
+).jsdom;
+if (dom?.window)
+{
+	if (typeof globalThis.localStorage === 'undefined')
+	{
 		globalThis.localStorage = dom.window.localStorage;
 	}
 
-	if (typeof globalThis.sessionStorage === 'undefined') {
+	if (typeof globalThis.sessionStorage === 'undefined')
+	{
 		globalThis.sessionStorage = dom.window.sessionStorage;
 	}
 }

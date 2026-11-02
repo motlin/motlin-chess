@@ -40,8 +40,10 @@
 		<!-- Theme: must run before React mounts to avoid FOUC. -->
 		<!-- Storage key MUST match THEME_STORAGE_KEY in src/theme/themeStorage.ts -->
 		<script>
-			(function () {
-				try {
+			(function ()
+			{
+				try
+				{
 					var stored = localStorage.getItem('motlin-chess-theme');
 					var mode = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
 					var resolved =
@@ -51,7 +53,9 @@
 								: 'light'
 							: mode;
 					document.documentElement.setAttribute('data-theme', resolved);
-				} catch (e) {
+				}
+				catch (e)
+				{
 					document.documentElement.setAttribute('data-theme', 'dark');
 				}
 			})();

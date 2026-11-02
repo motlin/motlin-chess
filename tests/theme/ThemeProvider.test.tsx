@@ -12,76 +12,115 @@ type MediaQueryListener = (event: MediaQueryListEvent) => void;
 let listeners: MediaQueryListener[];
 let darkMatches: boolean;
 
-function createMockMatchMedia(matches: boolean) {
+function createMockMatchMedia(matches: boolean)
+{
 	darkMatches = matches;
-	return (query: string): MediaQueryList => ({
+	return (query: string): MediaQueryList => (
+	{
 		matches: query === '(prefers-color-scheme: dark)' ? darkMatches : false,
 		media: query,
 		onchange: null,
-		addEventListener(_event: string, listener: EventListenerOrEventListenerObject | null) {
-			if (typeof listener === 'function') {
+		addEventListener(_event: string, listener: EventListenerOrEventListenerObject | null)
+		{
+			if (typeof listener === 'function')
+			{
 				listeners.push(listener as unknown as MediaQueryListener);
 			}
 		},
-		removeEventListener(_event: string, listener: EventListenerOrEventListenerObject | null) {
-			if (typeof listener === 'function') {
+		removeEventListener(_event: string, listener: EventListenerOrEventListenerObject | null)
+		{
+			if (typeof listener === 'function')
+			{
 				listeners = listeners.filter((l) => l !== (listener as unknown as MediaQueryListener));
 			}
 		},
-		addListener() {},
-		removeListener() {},
+		addListener()
+		{
+		},
+		removeListener()
+		{
+		},
 		dispatchEvent: () => true,
 	});
 }
 
-function wrapper({children}: {readonly children: ReactNode}) {
+function wrapper({children}: {readonly children: ReactNode})
+{
 	return <ThemeProvider>{children}</ThemeProvider>;
 }
 
-describe('ThemeProvider', () => {
-	beforeEach(() => {
+describe('ThemeProvider', () =>
+{
+	beforeEach(() =>
+	{
 		listeners = [];
 		localStorage.clear();
 		document.documentElement.removeAttribute('data-theme');
 		window.matchMedia = createMockMatchMedia(true) as typeof window.matchMedia;
 	});
 
-	afterEach(() => {
+	afterEach(() =>
+	{
 		listeners = [];
 		localStorage.clear();
 		document.documentElement.removeAttribute('data-theme');
 	});
 
-	test('sets data-theme on document.documentElement on mount', () => {
-		renderHook(() => useTheme(), {wrapper});
+	test('sets data-theme on document.documentElement on mount', () =>
+	{
+		renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
 		expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
 	});
 
-	test('default mode is system and applies based on matchMedia preferring dark', () => {
+	test('default mode is system and applies based on matchMedia preferring dark', () =>
+	{
 		window.matchMedia = createMockMatchMedia(true) as typeof window.matchMedia;
 
-		const {result} = renderHook(() => useTheme(), {wrapper});
+		const {result} = renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
 		expect(result.current.mode).toBe('system');
 		expect(result.current.resolvedTheme).toBe('dark');
 		expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
 	});
 
-	test('default mode is system and applies based on matchMedia preferring light', () => {
+	test('default mode is system and applies based on matchMedia preferring light', () =>
+	{
 		window.matchMedia = createMockMatchMedia(false) as typeof window.matchMedia;
 
-		const {result} = renderHook(() => useTheme(), {wrapper});
+		const {result} = renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
 		expect(result.current.mode).toBe('system');
 		expect(result.current.resolvedTheme).toBe('light');
 		expect(document.documentElement.getAttribute('data-theme')).toBe('light');
 	});
 
-	test('setMode light updates documentElement and writes to localStorage', () => {
-		const {result} = renderHook(() => useTheme(), {wrapper});
+	test('setMode light updates documentElement and writes to localStorage', () =>
+	{
+		const {result} = renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
-		act(() => {
+		act(() =>
+		{
 			result.current.setMode('light');
 		});
 
@@ -91,10 +130,17 @@ describe('ThemeProvider', () => {
 		expect(result.current.resolvedTheme).toBe('light');
 	});
 
-	test('setMode dark updates documentElement and writes to localStorage', () => {
-		const {result} = renderHook(() => useTheme(), {wrapper});
+	test('setMode dark updates documentElement and writes to localStorage', () =>
+	{
+		const {result} = renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
-		act(() => {
+		act(() =>
+		{
 			result.current.setMode('dark');
 		});
 
@@ -104,15 +150,27 @@ describe('ThemeProvider', () => {
 		expect(result.current.resolvedTheme).toBe('dark');
 	});
 
-	test('matchMedia change event when mode is system updates resolvedTheme', () => {
+	test('matchMedia change event when mode is system updates resolvedTheme', () =>
+	{
 		window.matchMedia = createMockMatchMedia(false) as typeof window.matchMedia;
-		const {result} = renderHook(() => useTheme(), {wrapper});
+		const {result} = renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
 		expect(result.current.resolvedTheme).toBe('light');
 
-		act(() => {
-			for (const listener of listeners) {
-				listener({matches: true} as MediaQueryListEvent);
+		act(() =>
+		{
+			for (const listener of listeners)
+			{
+				listener(
+					{
+						matches: true,
+					} as MediaQueryListEvent,
+				);
 			}
 		});
 
@@ -120,19 +178,32 @@ describe('ThemeProvider', () => {
 		expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
 	});
 
-	test('when mode is light, matchMedia changes do NOT change resolvedTheme', () => {
+	test('when mode is light, matchMedia changes do NOT change resolvedTheme', () =>
+	{
 		window.matchMedia = createMockMatchMedia(false) as typeof window.matchMedia;
-		const {result} = renderHook(() => useTheme(), {wrapper});
+		const {result} = renderHook(
+			() => useTheme(),
+			{
+				wrapper,
+			},
+		);
 
-		act(() => {
+		act(() =>
+		{
 			result.current.setMode('light');
 		});
 
 		expect(result.current.resolvedTheme).toBe('light');
 
-		act(() => {
-			for (const listener of listeners) {
-				listener({matches: true} as MediaQueryListEvent);
+		act(() =>
+		{
+			for (const listener of listeners)
+			{
+				listener(
+					{
+						matches: true,
+					} as MediaQueryListEvent,
+				);
 			}
 		});
 
@@ -140,8 +211,10 @@ describe('ThemeProvider', () => {
 		expect(document.documentElement.getAttribute('data-theme')).toBe('light');
 	});
 
-	test('useTheme throws when used outside provider', () => {
-		expect(() => {
+	test('useTheme throws when used outside provider', () =>
+	{
+		expect(() =>
+		{
 			renderHook(() => useTheme());
 		}).toThrow('useTheme must be used within ThemeProvider');
 	});

@@ -1,9 +1,14 @@
 import type {Board, Color, Position} from '../types.js';
 
-export interface PieceDefinition {
+export interface PieceDefinition
+{
 	readonly name: string;
 	readonly notation: string;
-	readonly symbols: {readonly white: string; readonly black: string};
+	readonly symbols:
+	{
+		readonly white: string;
+		readonly black: string;
+	};
 	readonly isStandard: boolean;
 	readonly count: 1 | 2;
 	readonly royal: boolean;

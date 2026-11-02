@@ -12,16 +12,22 @@ const CAMEL_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 	[3, 1],
 ];
 
-export const camelDefinition: PieceDefinition = {
+export const camelDefinition: PieceDefinition =
+{
 	name: 'Camel',
 	notation: 'L',
-	symbols: {white: 'L', black: 'l'},
+	symbols:
+	{
+		white: 'L',
+		black: 'l',
+	},
 	isStandard: false,
 	count: 2,
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition)
+	{
 		return getStepMoves(position, board, color, boardSize, CAMEL_OFFSETS, duckPosition);
 	},
 };

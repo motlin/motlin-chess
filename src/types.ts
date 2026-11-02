@@ -4,18 +4,21 @@ export type StandardPieceType = 'king' | 'queen' | 'rook' | 'bishop' | 'knight' 
 
 export type PieceType = StandardPieceType | (string & {});
 
-export interface Piece {
+export interface Piece
+{
 	readonly type: PieceType;
 	readonly color: Color;
 	readonly hasMoved: boolean;
 }
 
-export interface Position {
+export interface Position
+{
 	readonly row: number;
 	readonly col: number;
 }
 
-export interface Move {
+export interface Move
+{
 	readonly from: Position;
 	readonly to: Position;
 	readonly captured: Piece | null;
@@ -28,7 +31,8 @@ export type TurnPhase = 'move' | 'placeDuck';
 
 export type GameStatus = 'playing' | 'check' | 'checkmate' | 'stalemate' | 'kingCaptured' | 'fowled';
 
-export interface GameState {
+export interface GameState
+{
 	readonly board: Board;
 	readonly currentTurn: Color;
 	readonly selectedPosition: Position | null;
@@ -42,35 +46,54 @@ export interface GameState {
 	readonly turnPhase: TurnPhase;
 }
 
-export class Board {
+export class Board
+{
 	readonly size: number;
 	private readonly grid: ReadonlyArray<ReadonlyArray<Piece | null>>;
 
-	constructor(grid: ReadonlyArray<ReadonlyArray<Piece | null>>) {
+	constructor(grid: ReadonlyArray<ReadonlyArray<Piece | null>>)
+	{
 		this.size = grid.length;
 		this.grid = grid;
 	}
 
-	get(row: number, col: number): Piece | null {
+	get(row: number, col: number): Piece | null
+	{
 		return this.grid[row]![col] as Piece | null;
 	}
 
-	withPiece(row: number, col: number, piece: Piece | null): Board {
+	withPiece(row: number, col: number, piece: Piece | null): Board
+	{
 		const grid = this.grid.map((r) => [...r]);
 		grid[row]![col] = piece;
 		return new Board(grid);
 	}
 
-	toMutableGrid(): (Piece | null)[][] {
+	toMutableGrid(): (Piece | null)[][]
+	{
 		return this.grid.map((r) => [...r]);
 	}
 
-	static empty(size: number): Board {
-		return new Board(Array.from({length: size}, () => Array.from<Piece | null>({length: size}).fill(null)));
+	static empty(size: number): Board
+	{
+		return new Board(
+			Array.from(
+				{
+					length: size,
+				},
+				() =>
+					Array.from<Piece | null>(
+						{
+							length: size,
+						},
+					).fill(null),
+			),
+		);
 	}
 }
 
-export interface GameSettings {
+export interface GameSettings
+{
 	readonly boardSize: number;
 	readonly enabledPieces: ReadonlySet<string>;
 	readonly pieceSet: string;

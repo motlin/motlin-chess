@@ -4,7 +4,8 @@ import {formatPgn} from '../game/notation.js';
 import {SettingsPanel} from './SettingsPanel.js';
 import './MoveTranscript.css';
 
-interface MoveTranscriptProps {
+interface MoveTranscriptProps
+{
 	readonly sans: readonly string[];
 	readonly gameStatus: GameStatus;
 	readonly settings: GameSettings;
@@ -22,31 +23,38 @@ export function MoveTranscript({
 	onSettingsChange,
 	onReset,
 	onImport,
-}: MoveTranscriptProps): React.JSX.Element {
+}: MoveTranscriptProps): React.JSX.Element
+{
 	const [showSettings, setShowSettings] = useState(false);
 	const [copied, setCopied] = useState(false);
 	const moveListRef = useRef<HTMLDivElement>(null);
 	const popoverRef = useRef<HTMLDivElement>(null);
 	const gearRef = useRef<HTMLButtonElement>(null);
 
-	useEffect(() => {
-		if (moveListRef.current !== null) {
+	useEffect(() =>
+	{
+		if (moveListRef.current !== null)
+		{
 			moveListRef.current.scrollTop = moveListRef.current.scrollHeight;
 		}
 	}, [sans.length]);
 
-	useEffect(() => {
-		if (!showSettings) {
+	useEffect(() =>
+	{
+		if (!showSettings)
+		{
 			return;
 		}
 
-		function handleClickOutside(event: MouseEvent): void {
+		function handleClickOutside(event: MouseEvent): void
+		{
 			if (
 				popoverRef.current !== null &&
 				!popoverRef.current.contains(event.target as Node) &&
 				gearRef.current !== null &&
 				!gearRef.current.contains(event.target as Node)
-			) {
+			)
+			{
 				setShowSettings(false);
 			}
 		}
@@ -55,21 +63,31 @@ export function MoveTranscript({
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, [showSettings]);
 
-	function handleCopyPgn(): void {
+	function handleCopyPgn(): void
+	{
 		const pgn = formatPgn(settings, moveHistory, gameStatus);
-		void navigator.clipboard.writeText(pgn).then(() => {
+		void navigator.clipboard.writeText(pgn).then(() =>
+		{
 			setCopied(true);
 			setTimeout(() => setCopied(false), 1500);
 		});
 	}
 
-	const movePairs: Array<{readonly number: number; readonly white: string; readonly black: string | undefined}> = [];
-	for (let i = 0; i < sans.length; i += 2) {
-		movePairs.push({
-			number: Math.floor(i / 2) + 1,
-			white: sans[i]!,
-			black: sans[i + 1],
-		});
+	const movePairs: Array<
+	{
+		readonly number: number;
+		readonly white: string;
+		readonly black: string | undefined;
+	}> = [];
+	for (let i = 0; i < sans.length; i += 2)
+	{
+		movePairs.push(
+			{
+				number: Math.floor(i / 2) + 1,
+				white: sans[i]!,
+				black: sans[i + 1],
+			},
+		);
 	}
 
 	return (

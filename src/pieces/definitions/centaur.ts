@@ -14,23 +14,31 @@ const KNIGHT_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 	[2, 1],
 ];
 
-export const centaurDefinition: PieceDefinition = {
+export const centaurDefinition: PieceDefinition =
+{
 	name: 'Centaur',
 	notation: 'U',
-	symbols: {white: 'U', black: 'u'},
+	symbols:
+	{
+		white: 'U',
+		black: 'u',
+	},
 	isStandard: false,
 	count: 1,
 	royal: true,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition)
+	{
 		const kingMoves = getStepMoves(position, board, color, boardSize, KING_OFFSETS, duckPosition);
 		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS, duckPosition);
 		const seen = new Set(kingMoves.map((m) => `${m.row},${m.col}`));
 		const combined = [...kingMoves];
-		for (const move of knightMoves) {
+		for (const move of knightMoves)
+		{
 			const key = `${move.row},${move.col}`;
-			if (!seen.has(key)) {
+			if (!seen.has(key))
+			{
 				combined.push(move);
 			}
 		}
