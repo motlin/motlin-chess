@@ -26,7 +26,7 @@ format: install
 
 # Run checks (lint + typecheck; formatting is `just format`)
 check: install
-    vp check {{ if ci != "" { "" } else { "--fix" } }}
+    vp check --no-fmt {{ if ci != "" { "" } else { "--fix" } }}
 
 # Run tests
 test *args: install

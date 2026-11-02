@@ -4,11 +4,8 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(
 	{
-		// Formatting runs through oxfmt-next-line (configured in .oxfmtrc.json), not Vite+'s bundled oxfmt.
-		check:
-		{
-			fmt: false,
-		},
+		// Formatting runs through oxfmt-next-line (configured in .oxfmtrc.json), not Vite+'s bundled oxfmt,
+		// so there is no fmt block here and every `vp check` call passes --no-fmt.
 		lint:
 		{
 			plugins: [],
