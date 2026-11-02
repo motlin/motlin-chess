@@ -3,15 +3,9 @@ import {resolve} from 'node:path';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-	fmt: {
-		semi: true,
-		singleQuote: true,
-		useTabs: true,
-		tabWidth: 4,
-		printWidth: 120,
-		bracketSpacing: false,
-		trailingComma: 'all',
-		arrowParens: 'always',
+	// Formatting runs through oxfmt-next-line (configured in .oxfmtrc.json), not Vite+'s bundled oxfmt.
+	check: {
+		fmt: false,
 	},
 	lint: {
 		plugins: [],
