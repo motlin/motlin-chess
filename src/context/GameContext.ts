@@ -1,7 +1,8 @@
 import {createContext} from 'react';
 import type {GameSettings, GameState, PieceType, Position} from '../types.js';
 
-export interface GameContextValue {
+export interface GameContextValue
+{
 	readonly gameState: GameState;
 	readonly settings: GameSettings;
 	readonly onSquareClick: (position: Position) => void;

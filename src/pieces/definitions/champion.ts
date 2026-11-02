@@ -20,16 +20,22 @@ const CHAMPION_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 	[2, 2],
 ];
 
-export const championDefinition: PieceDefinition = {
+export const championDefinition: PieceDefinition =
+{
 	name: 'Champion',
 	notation: 'H',
-	symbols: {white: 'H', black: 'h'},
+	symbols:
+	{
+		white: 'H',
+		black: 'h',
+	},
 	isStandard: false,
 	count: 2,
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
+	getValidMoves(position, board, color, boardSize, _enPassantTarget)
+	{
 		return getStepMoves(position, board, color, boardSize, CHAMPION_OFFSETS);
 	},
 };

@@ -1,7 +1,8 @@
 import {useTheme} from '../theme/useTheme.js';
 import './ThemePicker.css';
 
-export function ThemePicker(): React.JSX.Element {
+export function ThemePicker(): React.JSX.Element
+{
 	const {mode, setMode} = useTheme();
 
 	return (

@@ -16,16 +16,22 @@ const WIZARD_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 	[3, 1],
 ];
 
-export const wizardDefinition: PieceDefinition = {
+export const wizardDefinition: PieceDefinition =
+{
 	name: 'Wizard',
 	notation: 'W',
-	symbols: {white: 'W', black: 'w'},
+	symbols:
+	{
+		white: 'W',
+		black: 'w',
+	},
 	isStandard: false,
 	count: 2,
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget) {
+	getValidMoves(position, board, color, boardSize, _enPassantTarget)
+	{
 		return getStepMoves(position, board, color, boardSize, WIZARD_OFFSETS);
 	},
 };

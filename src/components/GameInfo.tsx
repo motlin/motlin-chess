@@ -1,7 +1,8 @@
 import type {Color, GameStatus, TurnPhase} from '../types.js';
 import './GameInfo.css';
 
-interface GameInfoProps {
+interface GameInfoProps
+{
 	readonly currentTurn: Color;
 	readonly moveCount: number;
 	readonly gameStatus: GameStatus;
@@ -13,17 +14,22 @@ interface GameInfoProps {
 	readonly onRedo: () => void;
 }
 
-function getStatusText(gameStatus: GameStatus, currentTurn: Color, turnPhase: TurnPhase, duckChess: boolean): string {
-	switch (gameStatus) {
-		case 'kingCaptured': {
+function getStatusText(gameStatus: GameStatus, currentTurn: Color, turnPhase: TurnPhase, duckChess: boolean): string
+{
+	switch (gameStatus)
+	{
+		case 'kingCaptured':
+		{
 			const winner = currentTurn === 'white' ? 'White' : 'Black';
 			return `King captured! ${winner} wins!`;
 		}
-		case 'fowled': {
+		case 'fowled':
+		{
 			const winner = currentTurn === 'white' ? 'White' : 'Black';
 			return `Fowled! ${winner} wins!`;
 		}
-		case 'checkmate': {
+		case 'checkmate':
+		{
 			const winner = currentTurn === 'white' ? 'Black' : 'White';
 			return `Checkmate! ${winner} wins!`;
 		}
@@ -31,9 +37,11 @@ function getStatusText(gameStatus: GameStatus, currentTurn: Color, turnPhase: Tu
 			return 'Stalemate! Draw.';
 		case 'check':
 			return `${currentTurn === 'white' ? 'White' : 'Black'} is in check!`;
-		case 'playing': {
+		case 'playing':
+		{
 			const player = currentTurn === 'white' ? 'White' : 'Black';
-			if (duckChess && turnPhase === 'placeDuck') {
+			if (duckChess && turnPhase === 'placeDuck')
+			{
 				return `${player}: place the duck`;
 			}
 			return `${player} to move`;
@@ -51,7 +59,8 @@ export function GameInfo({
 	canRedo,
 	onUndo,
 	onRedo,
-}: GameInfoProps): React.JSX.Element {
+}: GameInfoProps): React.JSX.Element
+{
 	return (
 		<div className="game-info">
 			<div className={`status status-${gameStatus}`}>

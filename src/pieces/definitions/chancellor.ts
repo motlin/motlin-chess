@@ -12,23 +12,31 @@ const KNIGHT_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 	[2, 1],
 ];
 
-export const chancellorDefinition: PieceDefinition = {
+export const chancellorDefinition: PieceDefinition =
+{
 	name: 'Chancellor',
 	notation: 'C',
-	symbols: {white: 'C', black: 'c'},
+	symbols:
+	{
+		white: 'C',
+		black: 'c',
+	},
 	isStandard: false,
 	count: 2,
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition)
+	{
 		const rookMoves = getSlidingMoves(position, board, color, boardSize, CARDINAL_DIRECTIONS, duckPosition);
 		const knightMoves = getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS, duckPosition);
 		const seen = new Set(rookMoves.map((m) => `${m.row},${m.col}`));
 		const combined = [...rookMoves];
-		for (const move of knightMoves) {
+		for (const move of knightMoves)
+		{
 			const key = `${move.row},${move.col}`;
-			if (!seen.has(key)) {
+			if (!seen.has(key))
+			{
 				combined.push(move);
 			}
 		}

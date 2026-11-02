@@ -1,32 +1,88 @@
-export interface PieceSetInfo {
+export interface PieceSetInfo
+{
 	readonly id: string;
 	readonly name: string;
 }
 
 export const PIECE_SETS: readonly PieceSetInfo[] = [
-	{id: 'cburnett', name: 'Colin Burnett'},
-	{id: 'staunty', name: 'Staunty'},
-	{id: 'alpha', name: 'Alpha'},
-	{id: 'anarcandy', name: 'Anarcandy'},
-	{id: 'california', name: 'California'},
-	{id: 'cardinal', name: 'Cardinal'},
-	{id: 'gioco', name: 'Gioco'},
-	{id: 'governor', name: 'Governor'},
-	{id: 'horsey', name: 'Horsey'},
-	{id: 'icpieces', name: 'IC Pieces'},
-	{id: 'kosal', name: 'Kosal'},
-	{id: 'leipzig', name: 'Leipzig'},
-	{id: 'maestro', name: 'Maestro'},
-	{id: 'merida', name: 'Merida'},
-	{id: 'mpchess', name: 'MP Chess'},
-	{id: 'pirouetti', name: 'Pirouetti'},
-	{id: 'pixel', name: 'Pixel'},
-	{id: 'tatiana', name: 'Tatiana'},
+	{
+		id: 'cburnett',
+		name: 'Colin Burnett',
+	},
+	{
+		id: 'staunty',
+		name: 'Staunty',
+	},
+	{
+		id: 'alpha',
+		name: 'Alpha',
+	},
+	{
+		id: 'anarcandy',
+		name: 'Anarcandy',
+	},
+	{
+		id: 'california',
+		name: 'California',
+	},
+	{
+		id: 'cardinal',
+		name: 'Cardinal',
+	},
+	{
+		id: 'gioco',
+		name: 'Gioco',
+	},
+	{
+		id: 'governor',
+		name: 'Governor',
+	},
+	{
+		id: 'horsey',
+		name: 'Horsey',
+	},
+	{
+		id: 'icpieces',
+		name: 'IC Pieces',
+	},
+	{
+		id: 'kosal',
+		name: 'Kosal',
+	},
+	{
+		id: 'leipzig',
+		name: 'Leipzig',
+	},
+	{
+		id: 'maestro',
+		name: 'Maestro',
+	},
+	{
+		id: 'merida',
+		name: 'Merida',
+	},
+	{
+		id: 'mpchess',
+		name: 'MP Chess',
+	},
+	{
+		id: 'pirouetti',
+		name: 'Pirouetti',
+	},
+	{
+		id: 'pixel',
+		name: 'Pixel',
+	},
+	{
+		id: 'tatiana',
+		name: 'Tatiana',
+	},
 ];
 
 export const DEFAULT_PIECE_SET = 'cburnett';
 
-export interface BoardTheme {
+export interface BoardTheme
+{
 	readonly id: string;
 	readonly name: string;
 	readonly lightSquare: string;
@@ -149,13 +205,16 @@ export const BOARD_THEMES: readonly BoardTheme[] = [
 
 export const DEFAULT_BOARD_THEME = 'brown';
 
-export function getBoardTheme(id: string): BoardTheme {
+export function getBoardTheme(id: string): BoardTheme
+{
 	return BOARD_THEMES.find((t) => t.id === id) ?? BOARD_THEMES[0]!;
 }
 
-export function getPieceImagePath(pieceSet: string, color: 'white' | 'black', pieceType: string): string {
+export function getPieceImagePath(pieceSet: string, color: 'white' | 'black', pieceType: string): string
+{
 	const colorPrefix = color === 'white' ? 'w' : 'b';
-	const typeMap: Record<string, string> = {
+	const typeMap: Record<string, string> =
+	{
 		king: 'K',
 		queen: 'Q',
 		rook: 'R',

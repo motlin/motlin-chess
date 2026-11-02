@@ -38,22 +38,27 @@ const pieceRegistry = new Map<PieceType, PieceDefinition>([
 	['dragon', dragonDefinition],
 ]);
 
-export function getPieceDefinition(type: PieceType): PieceDefinition | undefined {
+export function getPieceDefinition(type: PieceType): PieceDefinition | undefined
+{
 	return pieceRegistry.get(type);
 }
 
-export function registerPiece(type: PieceType, definition: PieceDefinition): void {
+export function registerPiece(type: PieceType, definition: PieceDefinition): void
+{
 	pieceRegistry.set(type, definition);
 }
 
-export function getExtraPieceTypes(): PieceType[] {
+export function getExtraPieceTypes(): PieceType[]
+{
 	return [...pieceRegistry.entries()].filter(([_, def]) => !def.isStandard).map(([type]) => type);
 }
 
-export function getToggleablePieceTypes(): PieceType[] {
+export function getToggleablePieceTypes(): PieceType[]
+{
 	return [...pieceRegistry.entries()].filter(([_, def]) => def.toggleable).map(([type]) => type);
 }
 
-export function getAllPieceDefinitions(): ReadonlyMap<PieceType, PieceDefinition> {
+export function getAllPieceDefinitions(): ReadonlyMap<PieceType, PieceDefinition>
+{
 	return pieceRegistry;
 }

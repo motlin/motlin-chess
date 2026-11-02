@@ -3,7 +3,8 @@ import {Board} from '../types.js';
 import {getPieceDefinition} from '../pieces/registry.js';
 import {createInitialBoard, getStandardOffset} from './boardSetup.js';
 
-export function createInitialGameState(settings: GameSettings): GameState {
+export function createInitialGameState(settings: GameSettings): GameState
+{
 	return {
 		board: createInitialBoard(settings.boardSize, settings.enabledPieces),
 		currentTurn: 'white',
@@ -19,14 +20,17 @@ export function createInitialGameState(settings: GameSettings): GameState {
 	};
 }
 
-export function applyMove(board: Board, move: Move): Board {
+export function applyMove(board: Board, move: Move): Board
+{
 	const grid = board.toMutableGrid();
 	const piece = board.get(move.from.row, move.from.col);
-	if (piece === null) {
+	if (piece === null)
+	{
 		return new Board(grid);
 	}
 
-	const movedPiece: Piece = {
+	const movedPiece: Piece =
+	{
 		...piece,
 		hasMoved: true,
 		type: move.promotion ?? piece.type,
@@ -35,22 +39,30 @@ export function applyMove(board: Board, move: Move): Board {
 	grid[move.from.row]![move.from.col] = null;
 	grid[move.to.row]![move.to.col] = movedPiece;
 
-	if (move.isEnPassant) {
+	if (move.isEnPassant)
+	{
 		grid[move.from.row]![move.to.col] = null;
 	}
 
-	if (move.isCastle) {
+	if (move.isCastle)
+	{
 		const direction = move.to.col > move.from.col ? 1 : -1;
 		const rookFromCol =
 			direction === 1
 				? findRookCol(board, move.from.row, move.from.col, 1)
 				: findRookCol(board, move.from.row, move.from.col, -1);
-		if (rookFromCol !== null) {
+		if (rookFromCol !== null)
+		{
 			const rookToCol = move.from.col + direction;
 			const rook = board.get(move.from.row, rookFromCol);
-			if (rook !== null) {
+			if (rook !== null)
+			{
 				grid[move.from.row]![rookFromCol] = null;
-				grid[move.from.row]![rookToCol] = {...rook, hasMoved: true};
+				grid[move.from.row]![rookToCol] =
+				{
+					...rook,
+					hasMoved: true,
+				};
 			}
 		}
 	}
@@ -58,12 +70,16 @@ export function applyMove(board: Board, move: Move): Board {
 	return new Board(grid);
 }
 
-function findRookCol(board: Board, row: number, kingCol: number, direction: number): number | null {
+function findRookCol(board: Board, row: number, kingCol: number, direction: number): number | null
+{
 	let col = kingCol + direction;
-	while (col >= 0 && col < board.size) {
+	while (col >= 0 && col < board.size)
+	{
 		const piece = board.get(row, col);
-		if (piece !== null) {
-			if (piece.type === 'rook' && !piece.hasMoved) {
+		if (piece !== null)
+		{
+			if (piece.type === 'rook' && !piece.hasMoved)
+			{
 				return col;
 			}
 			return null;
@@ -73,17 +89,25 @@ function findRookCol(board: Board, row: number, kingCol: number, direction: numb
 	return null;
 }
 
-function isRoyal(type: string): boolean {
+function isRoyal(type: string): boolean
+{
 	const def = getPieceDefinition(type);
 	return def?.royal === true;
 }
 
-function findKing(board: Board, color: Color): Position | null {
-	for (let row = 0; row < board.size; row++) {
-		for (let col = 0; col < board.size; col++) {
+function findKing(board: Board, color: Color): Position | null
+{
+	for (let row = 0; row < board.size; row++)
+	{
+		for (let col = 0; col < board.size; col++)
+		{
 			const piece = board.get(row, col);
-			if (piece !== null && isRoyal(piece.type) && piece.color === color) {
-				return {row, col};
+			if (piece !== null && isRoyal(piece.type) && piece.color === color)
+			{
+				return {
+					row,
+					col,
+				};
 			}
 		}
 	}
@@ -95,19 +119,35 @@ function isSquareAttackedBy(
 	position: Position,
 	attackerColor: Color,
 	duckPosition?: Position | null,
-): boolean {
-	for (let row = 0; row < board.size; row++) {
-		for (let col = 0; col < board.size; col++) {
+): boolean
+{
+	for (let row = 0; row < board.size; row++)
+	{
+		for (let col = 0; col < board.size; col++)
+		{
 			const piece = board.get(row, col);
-			if (piece === null || piece.color !== attackerColor) {
+			if (piece === null || piece.color !== attackerColor)
+			{
 				continue;
 			}
 			const definition = getPieceDefinition(piece.type);
-			if (definition === undefined) {
+			if (definition === undefined)
+			{
 				continue;
 			}
-			const moves = definition.getValidMoves({row, col}, board, piece.color, board.size, null, duckPosition);
-			if (moves.some((m) => m.row === position.row && m.col === position.col)) {
+			const moves = definition.getValidMoves(
+				{
+					row,
+					col,
+				},
+				board,
+				piece.color,
+				board.size,
+				null,
+				duckPosition,
+			);
+			if (moves.some((m) => m.row === position.row && m.col === position.col))
+			{
 				return true;
 			}
 		}
@@ -115,9 +155,11 @@ function isSquareAttackedBy(
 	return false;
 }
 
-export function isInCheck(board: Board, color: Color, _boardSize?: number): boolean {
+export function isInCheck(board: Board, color: Color, _boardSize?: number): boolean
+{
 	const kingPos = findKing(board, color);
-	if (kingPos === null) {
+	if (kingPos === null)
+	{
 		return false;
 	}
 	const opponentColor: Color = color === 'white' ? 'black' : 'white';
@@ -129,14 +171,17 @@ function getRawMovesForPiece(
 	position: Position,
 	enPassantTarget: Position | null,
 	duckPosition?: Position | null,
-): Move[] {
+): Move[]
+{
 	const piece = board.get(position.row, position.col);
-	if (piece === null) {
+	if (piece === null)
+	{
 		return [];
 	}
 
 	const definition = getPieceDefinition(piece.type);
-	if (definition === undefined) {
+	if (definition === undefined)
+	{
 		return [];
 	}
 
@@ -151,33 +196,42 @@ function getRawMovesForPiece(
 	const promotionRow = piece.color === 'white' ? 0 : board.size - 1;
 
 	const moves: Move[] = [];
-	for (const to of targetPositions) {
+	for (const to of targetPositions)
+	{
 		const captured = board.get(to.row, to.col);
 		const isEnPassant = piece.type === 'pawn' && to.col !== position.col && captured === null;
 		const isPromotion = piece.type === 'pawn' && to.row === promotionRow;
 		const capturedPiece = isEnPassant ? board.get(position.row, to.col) : captured;
 
-		if (isPromotion) {
+		if (isPromotion)
+		{
 			const promotionTypes: PieceType[] = ['queen', 'rook', 'bishop', 'knight'];
-			for (const promotion of promotionTypes) {
-				moves.push({
+			for (const promotion of promotionTypes)
+			{
+				moves.push(
+					{
+						from: position,
+						to,
+						captured: capturedPiece,
+						isEnPassant,
+						isCastle: false,
+						promotion,
+					},
+				);
+			}
+		}
+		else
+		{
+			moves.push(
+				{
 					from: position,
 					to,
 					captured: capturedPiece,
 					isEnPassant,
 					isCastle: false,
-					promotion,
-				});
-			}
-		} else {
-			moves.push({
-				from: position,
-				to,
-				captured: capturedPiece,
-				isEnPassant,
-				isCastle: false,
-				promotion: null,
-			});
+					promotion: null,
+				},
+			);
 		}
 	}
 
@@ -189,69 +243,98 @@ function getCastlingMoves(
 	position: Position,
 	duckChess?: boolean,
 	duckPosition?: Position | null,
-): Move[] {
+): Move[]
+{
 	const piece = board.get(position.row, position.col);
-	if (piece === null || !isRoyal(piece.type) || piece.hasMoved) {
+	if (piece === null || !isRoyal(piece.type) || piece.hasMoved)
+	{
 		return [];
 	}
 
 	const opponentColor: Color = piece.color === 'white' ? 'black' : 'white';
-	if (!duckChess && isSquareAttackedBy(board, position, opponentColor)) {
+	if (!duckChess && isSquareAttackedBy(board, position, opponentColor))
+	{
 		return [];
 	}
 
 	const moves: Move[] = [];
 	const row = position.row;
 
-	for (const direction of [-1, 1] as const) {
+	for (const direction of [-1, 1] as const)
+	{
 		const rookCol = findRookCol(board, row, position.col, direction);
-		if (rookCol === null) {
+		if (rookCol === null)
+		{
 			continue;
 		}
 
 		const kingToCol = position.col + direction * 2;
-		if (kingToCol < 0 || kingToCol >= board.size) {
+		if (kingToCol < 0 || kingToCol >= board.size)
+		{
 			continue;
 		}
 		let pathClear = true;
 		const minCol = Math.min(position.col, rookCol);
 		const maxCol = Math.max(position.col, rookCol);
-		for (let col = minCol + 1; col < maxCol; col++) {
-			if (board.get(row, col) !== null) {
+		for (let col = minCol + 1; col < maxCol; col++)
+		{
+			if (board.get(row, col) !== null)
+			{
 				pathClear = false;
 				break;
 			}
-			if (duckPosition && duckPosition.row === row && duckPosition.col === col) {
+			if (duckPosition && duckPosition.row === row && duckPosition.col === col)
+			{
 				pathClear = false;
 				break;
 			}
 		}
-		if (!pathClear) {
+		if (!pathClear)
+		{
 			continue;
 		}
 
-		if (!duckChess) {
+		if (!duckChess)
+		{
 			let passesThroughCheck = false;
 			const step = direction;
-			for (let col = position.col + step; col !== kingToCol + step; col += step) {
-				if (isSquareAttackedBy(board, {row, col}, opponentColor)) {
+			for (let col = position.col + step; col !== kingToCol + step; col += step)
+			{
+				if (
+					isSquareAttackedBy(
+						board,
+						{
+							row,
+							col,
+						},
+						opponentColor,
+					)
+				)
+				{
 					passesThroughCheck = true;
 					break;
 				}
 			}
-			if (passesThroughCheck) {
+			if (passesThroughCheck)
+			{
 				continue;
 			}
 		}
 
-		moves.push({
-			from: position,
-			to: {row, col: kingToCol},
-			captured: null,
-			isEnPassant: false,
-			isCastle: true,
-			promotion: null,
-		});
+		moves.push(
+			{
+				from: position,
+				to:
+				{
+					row,
+					col: kingToCol,
+				},
+				captured: null,
+				isEnPassant: false,
+				isCastle: true,
+				promotion: null,
+			},
+		);
 	}
 
 	return moves;
@@ -264,23 +347,28 @@ export function getLegalMoves(
 	enPassantTarget: Position | null,
 	duckChess?: boolean,
 	duckPosition?: Position | null,
-): Move[] {
+): Move[]
+{
 	const piece = board.get(position.row, position.col);
-	if (piece === null) {
+	if (piece === null)
+	{
 		return [];
 	}
 
 	const rawMoves = getRawMovesForPiece(board, position, enPassantTarget, duckPosition);
 
-	if (isRoyal(piece.type)) {
+	if (isRoyal(piece.type))
+	{
 		rawMoves.push(...getCastlingMoves(board, position, duckChess, duckPosition));
 	}
 
-	if (duckChess) {
+	if (duckChess)
+	{
 		return rawMoves;
 	}
 
-	return rawMoves.filter((move) => {
+	return rawMoves.filter((move) =>
+	{
 		const newBoard = applyMove(board, move);
 		return !isInCheck(newBoard, piece.color, board.size);
 	});
@@ -292,15 +380,30 @@ function hasAnyLegalMoves(
 	enPassantTarget: Position | null,
 	duckChess?: boolean,
 	duckPosition?: Position | null,
-): boolean {
-	for (let row = 0; row < board.size; row++) {
-		for (let col = 0; col < board.size; col++) {
+): boolean
+{
+	for (let row = 0; row < board.size; row++)
+	{
+		for (let col = 0; col < board.size; col++)
+		{
 			const piece = board.get(row, col);
-			if (piece === null || piece.color !== color) {
+			if (piece === null || piece.color !== color)
+			{
 				continue;
 			}
-			const moves = getLegalMoves(board, {row, col}, board.size, enPassantTarget, duckChess, duckPosition);
-			if (moves.length > 0) {
+			const moves = getLegalMoves(
+				board,
+				{
+					row,
+					col,
+				},
+				board.size,
+				enPassantTarget,
+				duckChess,
+				duckPosition,
+			);
+			if (moves.length > 0)
+			{
 				return true;
 			}
 		}
@@ -315,12 +418,16 @@ export function getGameStatus(
 	enPassantTarget: Position | null,
 	duckChess?: boolean,
 	duckPosition?: Position | null,
-): GameStatus {
-	if (duckChess) {
-		if (findKing(board, 'white') === null || findKing(board, 'black') === null) {
+): GameStatus
+{
+	if (duckChess)
+	{
+		if (findKing(board, 'white') === null || findKing(board, 'black') === null)
+		{
 			return 'kingCaptured';
 		}
-		if (!hasAnyLegalMoves(board, currentTurn, enPassantTarget, true, duckPosition)) {
+		if (!hasAnyLegalMoves(board, currentTurn, enPassantTarget, true, duckPosition))
+		{
 			return 'fowled';
 		}
 		return 'playing';
@@ -329,62 +436,87 @@ export function getGameStatus(
 	const inCheck = isInCheck(board, currentTurn, boardSize);
 	const hasLegal = hasAnyLegalMoves(board, currentTurn, enPassantTarget);
 
-	if (!hasLegal) {
+	if (!hasLegal)
+	{
 		return inCheck ? 'checkmate' : 'stalemate';
 	}
 	return inCheck ? 'check' : 'playing';
 }
 
-export function computeEnPassantTarget(move: Move, piece: Piece, boardSize: number): Position | null {
-	if (piece.type !== 'pawn') {
+export function computeEnPassantTarget(move: Move, piece: Piece, boardSize: number): Position | null
+{
+	if (piece.type !== 'pawn')
+	{
 		return null;
 	}
 	const rowDiff = Math.abs(move.to.row - move.from.row);
-	if (rowDiff !== 2) {
+	if (rowDiff !== 2)
+	{
 		return null;
 	}
 	const behindRow = move.from.row + (piece.color === 'white' ? -1 : 1);
-	if (behindRow < 0 || behindRow >= boardSize) {
+	if (behindRow < 0 || behindRow >= boardSize)
+	{
 		return null;
 	}
-	return {row: behindRow, col: move.from.col};
+	return {
+		row: behindRow,
+		col: move.from.col,
+	};
 }
 
-export function selectSquare(state: GameState, position: Position, duckChess?: boolean): GameState {
+export function selectSquare(state: GameState, position: Position, duckChess?: boolean): GameState
+{
 	if (
 		state.gameStatus === 'checkmate' ||
 		state.gameStatus === 'stalemate' ||
 		state.gameStatus === 'kingCaptured' ||
 		state.gameStatus === 'fowled'
-	) {
+	)
+	{
 		return state;
 	}
 
-	if (duckChess && state.turnPhase === 'placeDuck') {
+	if (duckChess && state.turnPhase === 'placeDuck')
+	{
 		return placeDuck(state, position);
 	}
 
-	if (state.pendingPromotion !== null) {
+	if (state.pendingPromotion !== null)
+	{
 		return state;
 	}
 
 	const clickedPiece = state.board.get(position.row, position.col);
 
-	if (state.selectedPosition !== null) {
-		if (state.selectedPosition.row === position.row && state.selectedPosition.col === position.col) {
-			return {...state, selectedPosition: null, validMoves: []};
+	if (state.selectedPosition !== null)
+	{
+		if (state.selectedPosition.row === position.row && state.selectedPosition.col === position.col)
+		{
+			return {
+				...state,
+				selectedPosition: null,
+				validMoves: [],
+			};
 		}
 
 		const selectedMove = state.validMoves.find((m) => m.to.row === position.row && m.to.col === position.col);
 
-		if (selectedMove !== undefined) {
+		if (selectedMove !== undefined)
+		{
 			const selectedPiece = state.board.get(state.selectedPosition.row, state.selectedPosition.col);
-			if (selectedPiece === null) {
-				return {...state, selectedPosition: null, validMoves: []};
+			if (selectedPiece === null)
+			{
+				return {
+					...state,
+					selectedPosition: null,
+					validMoves: [],
+				};
 			}
 
 			const promotionRow = state.currentTurn === 'white' ? 0 : state.boardSize - 1;
-			if (selectedPiece.type === 'pawn' && position.row === promotionRow) {
+			if (selectedPiece.type === 'pawn' && position.row === promotionRow)
+			{
 				return {
 					...state,
 					pendingPromotion: selectedMove,
@@ -394,7 +526,8 @@ export function selectSquare(state: GameState, position: Position, duckChess?: b
 			return executeMove(state, selectedMove, selectedPiece, duckChess);
 		}
 
-		if (clickedPiece !== null && clickedPiece.color === state.currentTurn) {
+		if (clickedPiece !== null && clickedPiece.color === state.currentTurn)
+		{
 			const moves = getLegalMoves(
 				state.board,
 				position,
@@ -403,13 +536,22 @@ export function selectSquare(state: GameState, position: Position, duckChess?: b
 				duckChess,
 				state.duckPosition,
 			);
-			return {...state, selectedPosition: position, validMoves: moves};
+			return {
+				...state,
+				selectedPosition: position,
+				validMoves: moves,
+			};
 		}
 
-		return {...state, selectedPosition: null, validMoves: []};
+		return {
+			...state,
+			selectedPosition: null,
+			validMoves: [],
+		};
 	}
 
-	if (clickedPiece !== null && clickedPiece.color === state.currentTurn) {
+	if (clickedPiece !== null && clickedPiece.color === state.currentTurn)
+	{
 		const moves = getLegalMoves(
 			state.board,
 			position,
@@ -418,16 +560,22 @@ export function selectSquare(state: GameState, position: Position, duckChess?: b
 			duckChess,
 			state.duckPosition,
 		);
-		return {...state, selectedPosition: position, validMoves: moves};
+		return {
+			...state,
+			selectedPosition: position,
+			validMoves: moves,
+		};
 	}
 
 	return state;
 }
 
-function placeDuck(state: GameState, position: Position): GameState {
+function placeDuck(state: GameState, position: Position): GameState
+{
 	const target = state.board.get(position.row, position.col);
 	if (target !== null) return state;
-	if (state.duckPosition && position.row === state.duckPosition.row && position.col === state.duckPosition.col) {
+	if (state.duckPosition && position.row === state.duckPosition.row && position.col === state.duckPosition.col)
+	{
 		return state;
 	}
 
@@ -445,28 +593,51 @@ function placeDuck(state: GameState, position: Position): GameState {
 	};
 }
 
-export function completePromotion(state: GameState, promotionType: PieceType, duckChess?: boolean): GameState {
-	if (state.pendingPromotion === null) {
+export function completePromotion(state: GameState, promotionType: PieceType, duckChess?: boolean): GameState
+{
+	if (state.pendingPromotion === null)
+	{
 		return state;
 	}
 
-	const move: Move = {...state.pendingPromotion, promotion: promotionType};
+	const move: Move =
+	{
+		...state.pendingPromotion,
+		promotion: promotionType,
+	};
 	const piece = state.board.get(move.from.row, move.from.col);
-	if (piece === null) {
-		return {...state, pendingPromotion: null, selectedPosition: null, validMoves: []};
+	if (piece === null)
+	{
+		return {
+			...state,
+			pendingPromotion: null,
+			selectedPosition: null,
+			validMoves: [],
+		};
 	}
 
-	return executeMove({...state, pendingPromotion: null}, move, piece, duckChess);
+	return executeMove(
+		{
+			...state,
+			pendingPromotion: null,
+		},
+		move,
+		piece,
+		duckChess,
+	);
 }
 
-function executeMove(state: GameState, move: Move, piece: Piece, duckChess?: boolean): GameState {
+function executeMove(state: GameState, move: Move, piece: Piece, duckChess?: boolean): GameState
+{
 	const newBoard = applyMove(state.board, move);
 	const enPassantTarget = computeEnPassantTarget(move, piece, state.boardSize);
 
-	if (duckChess) {
+	if (duckChess)
+	{
 		const kingCaptured = move.captured !== null && isRoyal(move.captured.type);
 
-		if (kingCaptured) {
+		if (kingCaptured)
+		{
 			return {
 				board: newBoard,
 				currentTurn: state.currentTurn,
@@ -515,6 +686,7 @@ function executeMove(state: GameState, move: Move, piece: Piece, duckChess?: boo
 	};
 }
 
-export function getKingColumn(boardSize: number): number {
+export function getKingColumn(boardSize: number): number
+{
 	return getStandardOffset(boardSize) + 4;
 }

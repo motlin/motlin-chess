@@ -3,23 +3,32 @@ import {moveToSan} from './notation.js';
 import {applyMove, computeEnPassantTarget, getGameStatus, getLegalMoves} from './gameLogic.js';
 import {createInitialBoard} from './boardSetup.js';
 
-function stripSuffix(san: string): string {
+function stripSuffix(san: string): string
+{
 	return san.replace(/[+#]$/, '');
 }
 
-export function parsePgn(pgn: string): {headers: Record<string, string>; moves: string[]} {
+export function parsePgn(pgn: string):
+{
+	headers: Record<string, string>;
+	moves: string[];
+}
+{
 	const headers: Record<string, string> = {};
 	const lines = pgn.split('\n');
 
 	const movetextLines: string[] = [];
-	for (const line of lines) {
+	for (const line of lines)
+	{
 		const trimmed = line.trim();
 		const headerMatch = trimmed.match(/^\[(\w+)\s+"(.*)"\]$/);
-		if (headerMatch) {
+		if (headerMatch)
+		{
 			headers[headerMatch[1]!] = headerMatch[2]!;
 			continue;
 		}
-		if (trimmed.length > 0) {
+		if (trimmed.length > 0)
+		{
 			movetextLines.push(trimmed);
 		}
 	}
@@ -31,7 +40,8 @@ export function parsePgn(pgn: string): {headers: Record<string, string>; moves: 
 
 	// Strip parenthesized variations (nested)
 	let previous = '';
-	while (previous !== movetext) {
+	while (previous !== movetext)
+	{
 		previous = movetext;
 		movetext = movetext.replace(/\([^()]*\)/g, '');
 	}
@@ -42,18 +52,24 @@ export function parsePgn(pgn: string): {headers: Record<string, string>; moves: 
 	const resultTokens = new Set(['1-0', '0-1', '1/2-1/2', '*']);
 
 	const moves: string[] = [];
-	for (const token of tokens) {
-		if (resultTokens.has(token)) {
+	for (const token of tokens)
+	{
+		if (resultTokens.has(token))
+		{
 			continue;
 		}
 		// Skip move numbers like "1." or "1..."
-		if (/^\d+\./.test(token)) {
+		if (/^\d+\./.test(token))
+		{
 			continue;
 		}
 		moves.push(token);
 	}
 
-	return {headers, moves};
+	return {
+		headers,
+		moves,
+	};
 }
 
 export function findMoveForSan(
@@ -62,20 +78,34 @@ export function findMoveForSan(
 	color: Color,
 	boardSize: number,
 	enPassantTarget: Position | null,
-): Move | null {
+): Move | null
+{
 	const strippedInput = stripSuffix(san);
 
-	for (let row = 0; row < boardSize; row++) {
-		for (let col = 0; col < boardSize; col++) {
+	for (let row = 0; row < boardSize; row++)
+	{
+		for (let col = 0; col < boardSize; col++)
+		{
 			const piece = board.get(row, col);
-			if (piece === null || piece.color !== color) {
+			if (piece === null || piece.color !== color)
+			{
 				continue;
 			}
 
-			const legalMoves = getLegalMoves(board, {row, col}, boardSize, enPassantTarget);
-			for (const move of legalMoves) {
+			const legalMoves = getLegalMoves(
+				board,
+				{
+					row,
+					col,
+				},
+				boardSize,
+				enPassantTarget,
+			);
+			for (const move of legalMoves)
+			{
 				const moveSan = moveToSan(board, move, boardSize, enPassantTarget, 'playing');
-				if (stripSuffix(moveSan) === strippedInput) {
+				if (stripSuffix(moveSan) === strippedInput)
+				{
 					return move;
 				}
 			}
@@ -85,7 +115,8 @@ export function findMoveForSan(
 	return null;
 }
 
-export function importPgn(pgn: string, settings: GameSettings): GameState {
+export function importPgn(pgn: string, settings: GameSettings): GameState
+{
 	const {moves: sanMoves} = parsePgn(pgn);
 
 	let board = createInitialBoard(settings.boardSize, settings.enabledPieces);
@@ -93,9 +124,11 @@ export function importPgn(pgn: string, settings: GameSettings): GameState {
 	let enPassantTarget: Position | null = null;
 	const moveHistory: Move[] = [];
 
-	for (const san of sanMoves) {
+	for (const san of sanMoves)
+	{
 		const move = findMoveForSan(san, board, currentTurn, settings.boardSize, enPassantTarget);
-		if (move === null) {
+		if (move === null)
+		{
 			throw new Error(`Invalid or illegal move: ${san}`);
 		}
 
