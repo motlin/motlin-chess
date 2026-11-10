@@ -3,7 +3,8 @@ import {getPieceImagePath} from '../themes.js';
 import {getPieceDefinition} from '../pieces/registry.js';
 import './PromotionDialog.css';
 
-interface PromotionDialogProps {
+interface PromotionDialogProps
+{
 	readonly color: Color;
 	readonly pieceSet: string;
 	readonly onSelect: (pieceType: PieceType) => void;
@@ -11,13 +12,15 @@ interface PromotionDialogProps {
 
 const PROMOTION_OPTIONS: PieceType[] = ['queen', 'rook', 'bishop', 'knight'];
 
-export function PromotionDialog({color, pieceSet, onSelect}: PromotionDialogProps): React.JSX.Element {
+export function PromotionDialog({color, pieceSet, onSelect}: PromotionDialogProps): React.JSX.Element
+{
 	return (
 		<div className="promotion-overlay">
 			<div className="promotion-dialog">
 				<h3 className="promotion-title">Promote pawn to:</h3>
 				<div className="promotion-options">
-					{PROMOTION_OPTIONS.map((type) => {
+					{PROMOTION_OPTIONS.map((type) =>
+					{
 						const def = getPieceDefinition(type);
 						const src = getPieceImagePath(pieceSet, color, type);
 						return (

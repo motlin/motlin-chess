@@ -1,6 +1,7 @@
 import {describe, expect, test} from 'vite-plus/test';
 import type {PieceDefinition} from '../../src/pieces/PieceDefinition.js';
-import {
+import
+{
 	getAllPieceDefinitions,
 	getExtraPieceTypes,
 	getPieceDefinition,
@@ -8,23 +9,29 @@ import {
 	registerPiece,
 } from '../../src/pieces/registry.js';
 
-describe('piece registry', () => {
-	test('getPieceDefinition returns definition for standard pieces', () => {
-		for (const type of ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']) {
+describe('piece registry', () =>
+{
+	test('getPieceDefinition returns definition for standard pieces', () =>
+	{
+		for (const type of ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn'])
+		{
 			const def = getPieceDefinition(type);
 			expect(def).toBeDefined();
 			expect(def!.isStandard).toBe(true);
 		}
 	});
 
-	test('getPieceDefinition returns undefined for unknown piece', () => {
+	test('getPieceDefinition returns undefined for unknown piece', () =>
+	{
 		expect(getPieceDefinition('nonexistent')).toBeUndefined();
 	});
 
-	test('getExtraPieceTypes returns only non-standard pieces', () => {
+	test('getExtraPieceTypes returns only non-standard pieces', () =>
+	{
 		const extras = getExtraPieceTypes();
 		expect(extras.length).toBeGreaterThan(0);
-		for (const type of extras) {
+		for (const type of extras)
+		{
 			const def = getPieceDefinition(type);
 			expect(def!.isStandard).toBe(false);
 		}
@@ -32,9 +39,11 @@ describe('piece registry', () => {
 		expect(extras).not.toContain('pawn');
 	});
 
-	test('getToggleablePieceTypes returns only toggleable pieces', () => {
+	test('getToggleablePieceTypes returns only toggleable pieces', () =>
+	{
 		const toggleable = getToggleablePieceTypes();
-		for (const type of toggleable) {
+		for (const type of toggleable)
+		{
 			const def = getPieceDefinition(type);
 			expect(def!.toggleable).toBe(true);
 		}
@@ -44,7 +53,8 @@ describe('piece registry', () => {
 		expect(toggleable).toContain('archbishop');
 	});
 
-	test('getAllPieceDefinitions returns all registered pieces', () => {
+	test('getAllPieceDefinitions returns all registered pieces', () =>
+	{
 		const all = getAllPieceDefinitions();
 		expect(all.size).toBeGreaterThanOrEqual(16);
 		expect(all.has('king')).toBe(true);
@@ -52,17 +62,24 @@ describe('piece registry', () => {
 		expect(all.has('amazon')).toBe(true);
 	});
 
-	test('registerPiece adds a new piece', () => {
-		const testDef: PieceDefinition = {
+	test('registerPiece adds a new piece', () =>
+	{
+		const testDef: PieceDefinition =
+		{
 			name: 'TestPiece',
 			notation: 'TP',
-			symbols: {white: 'T', black: 't'},
+			symbols:
+			{
+				white: 'T',
+				black: 't',
+			},
 			isStandard: false,
 			count: 2,
 			royal: false,
 			jumper: false,
 			toggleable: true,
-			getValidMoves() {
+			getValidMoves()
+			{
 				return [];
 			},
 		};

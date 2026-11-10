@@ -12,16 +12,22 @@ const KNIGHT_OFFSETS: ReadonlyArray<readonly [number, number]> = [
 	[2, 1],
 ];
 
-export const knightDefinition: PieceDefinition = {
+export const knightDefinition: PieceDefinition =
+{
 	name: 'Knight',
 	notation: 'N',
-	symbols: {white: '♘', black: '♞'},
+	symbols:
+	{
+		white: '♘',
+		black: '♞',
+	},
 	isStandard: true,
 	count: 2,
 	royal: false,
 	jumper: true,
 	toggleable: true,
-	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition) {
+	getValidMoves(position, board, color, boardSize, _enPassantTarget, duckPosition)
+	{
 		return getStepMoves(position, board, color, boardSize, KNIGHT_OFFSETS, duckPosition);
 	},
 };

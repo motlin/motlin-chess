@@ -9,8 +9,10 @@ import {PromotionDialog} from './PromotionDialog.js';
 import {SettingsPanel} from './SettingsPanel.js';
 import './Game.css';
 
-export function Game(): React.JSX.Element {
-	const {
+export function Game(): React.JSX.Element
+{
+	const
+	{
 		gameState,
 		settings,
 		onSquareClick,

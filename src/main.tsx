@@ -4,7 +4,8 @@ import {App} from './App.js';
 
 const root = document.getElementById('app');
 
-if (!root) {
+if (!root)
+{
 	throw new Error('Root element not found');
 }
 

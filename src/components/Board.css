@@ -1,11 +1,13 @@
-.board-container {
+.board-container
+{
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	flex-shrink: 0;
 }
 
-.board {
+.board
+{
 	display: grid;
 	width: var(--board-dimension);
 	height: var(--board-dimension);
