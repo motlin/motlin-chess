@@ -6,51 +6,68 @@ import {buildBackRank} from '../game/boardSetup.js';
 import {ThemePicker} from './ThemePicker.js';
 import './SettingsPanel.css';
 
-interface SettingsPanelProps {
+interface SettingsPanelProps
+{
 	readonly settings: GameSettings;
 	readonly onSettingsChange: (update: Partial<GameSettings>) => void;
 	readonly onReset: () => void;
 	readonly onImport: (pgn: string) => void;
 }
 
-export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: SettingsPanelProps): React.JSX.Element {
+export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: SettingsPanelProps): React.JSX.Element
+{
 	const toggleablePieces = getToggleablePieceTypes();
 	const backRank = buildBackRank(settings.enabledPieces, settings.boardSize);
 	const [pgnText, setPgnText] = useState('');
 	const [importError, setImportError] = useState<string>('');
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void {
+	function handleBoardSizeChange(event: React.ChangeEvent<HTMLInputElement>): void
+	{
 		const size = Number(event.target.value) * 2;
-		if (size >= 4 && size <= 16) {
-			onSettingsChange({boardSize: size});
+		if (size >= 4 && size <= 16)
+		{
+			onSettingsChange(
+				{
+					boardSize: size,
+				},
+			);
 		}
 	}
 
-	function handleImport(text: string): void {
+	function handleImport(text: string): void
+	{
 		const trimmed = text.trim();
-		if (trimmed === '') {
+		if (trimmed === '')
+		{
 			setImportError('Please enter PGN text.');
 			return;
 		}
-		try {
+		try
+		{
 			onImport(trimmed);
 			setImportError('');
 			setPgnText('');
-		} catch (error) {
+		}
+		catch (error)
+		{
 			setImportError(error instanceof Error ? error.message : 'Failed to import PGN.');
 		}
 	}
 
-	function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>): void {
+	function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>): void
+	{
 		const file = event.target.files?.[0];
-		if (file === undefined) {
+		if (file === undefined)
+		{
 			return;
 		}
 		const reader = new FileReader();
-		reader.onload = (readEvent) => {
+		reader.onload = (readEvent) =>
+		{
 			const content = readEvent.target?.result;
-			if (typeof content === 'string') {
+			if (typeof content === 'string')
+			{
 				setPgnText(content);
 				handleImport(content);
 			}
@@ -59,14 +76,22 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 		event.target.value = '';
 	}
 
-	function handlePieceToggle(pieceType: string): void {
+	function handlePieceToggle(pieceType: string): void
+	{
 		const next = new Set(settings.enabledPieces);
-		if (next.has(pieceType)) {
+		if (next.has(pieceType))
+		{
 			next.delete(pieceType);
-		} else {
+		}
+		else
+		{
 			next.add(pieceType);
 		}
-		onSettingsChange({enabledPieces: next});
+		onSettingsChange(
+			{
+				enabledPieces: next,
+			},
+		);
 	}
 
 	return (
@@ -83,7 +108,13 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 					<input
 						type="checkbox"
 						checked={settings.duckChess}
-						onChange={() => onSettingsChange({duckChess: !settings.duckChess})}
+						onChange={() =>
+							onSettingsChange(
+								{
+									duckChess: !settings.duckChess,
+								},
+							)
+						}
 					/>
 					<span>🦆 Duck Chess</span>
 				</label>
@@ -112,7 +143,13 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 					id="piece-set"
 					className="setting-select"
 					value={settings.pieceSet}
-					onChange={(e) => onSettingsChange({pieceSet: e.target.value})}
+					onChange={(e) =>
+						onSettingsChange(
+							{
+								pieceSet: e.target.value,
+							},
+						)
+					}
 				>
 					{PIECE_SETS.map((set) => (
 						<option key={set.id} value={set.id}>
@@ -130,11 +167,29 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 							key={theme.id}
 							type="button"
 							className={`theme-swatch ${settings.boardTheme === theme.id ? 'theme-swatch-active' : ''}`}
-							onClick={() => onSettingsChange({boardTheme: theme.id})}
+							onClick={() =>
+								onSettingsChange(
+									{
+										boardTheme: theme.id,
+									},
+								)
+							}
 							title={theme.name}
 						>
-							<span className="swatch-light" style={{backgroundColor: theme.lightSquare}} />
-							<span className="swatch-dark" style={{backgroundColor: theme.darkSquare}} />
+							<span
+								className="swatch-light"
+								style={
+								{
+									backgroundColor: theme.lightSquare,
+								}}
+							/>
+							<span
+								className="swatch-dark"
+								style={
+								{
+									backgroundColor: theme.darkSquare,
+								}}
+							/>
 						</button>
 					))}
 				</div>
@@ -143,7 +198,8 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 			<div className="setting-group">
 				<h3 className="setting-label">Pieces</h3>
 				<div className="pieces-list">
-					{toggleablePieces.map((type) => {
+					{toggleablePieces.map((type) =>
+					{
 						const def = getPieceDefinition(type);
 						return (
 							<label key={type} className="piece-toggle">
@@ -186,7 +242,8 @@ export function SettingsPanel({settings, onSettingsChange, onReset, onImport}: S
 					className="pgn-textarea"
 					placeholder="Paste PGN text here..."
 					value={pgnText}
-					onChange={(e) => {
+					onChange={(e) =>
+					{
 						setPgnText(e.target.value);
 						setImportError('');
 					}}

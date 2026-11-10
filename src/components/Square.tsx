@@ -2,7 +2,8 @@ import type {Piece} from '../types.js';
 import {PieceDisplay} from './PieceDisplay.js';
 import './Square.css';
 
-interface SquareProps {
+interface SquareProps
+{
 	readonly piece: Piece | null;
 	readonly isLight: boolean;
 	readonly isSelected: boolean;
@@ -28,7 +29,8 @@ export function Square({
 	rankLabel,
 	fileLabel,
 	onClick,
-}: SquareProps): React.JSX.Element {
+}: SquareProps): React.JSX.Element
+{
 	const classes = [
 		'square',
 		isLight ? 'square-light' : 'square-dark',

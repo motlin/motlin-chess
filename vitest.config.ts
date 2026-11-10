@@ -5,12 +5,15 @@ import viteConfig from './vite.config';
 // See: https://github.com/storybookjs/storybook/issues/33287
 export default mergeConfig(
 	viteConfig,
-	defineConfig({
-		test: {
-			execArgv: ['--no-experimental-webstorage'],
-			globals: true,
-			environment: 'node',
-			setupFiles: ['./vitest.setup.ts'],
+	defineConfig(
+		{
+			test:
+			{
+				execArgv: ['--no-experimental-webstorage'],
+				globals: true,
+				environment: 'node',
+				setupFiles: ['./vitest.setup.ts'],
+			},
 		},
-	}),
+	),
 );

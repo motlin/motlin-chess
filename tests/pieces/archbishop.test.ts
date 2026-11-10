@@ -3,18 +3,31 @@ import type {Piece} from '../../src/types.js';
 import {Board} from '../../src/types.js';
 import {archbishopDefinition} from '../../src/pieces/definitions/archbishop.js';
 
-function emptyBoard(size: number): Board {
+function emptyBoard(size: number): Board
+{
 	return Board.empty(size);
 }
 
-function placePiece(board: Board, row: number, col: number, piece: Piece): Board {
+function placePiece(board: Board, row: number, col: number, piece: Piece): Board
+{
 	return board.withPiece(row, col, piece);
 }
 
-describe('archbishop movement', () => {
-	test('combines bishop and knight moves from center', () => {
+describe('archbishop movement', () =>
+{
+	test('combines bishop and knight moves from center', () =>
+	{
 		const board = emptyBoard(8);
-		const moves = archbishopDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		const moves = archbishopDefinition.getValidMoves(
+			{
+				row: 4,
+				col: 4,
+			},
+			board,
+			'white',
+			8,
+			null,
+		);
 		const knightMoves = moves.filter(
 			(m) =>
 				(Math.abs(m.row - 4) === 2 && Math.abs(m.col - 4) === 1) ||
@@ -28,17 +41,46 @@ describe('archbishop movement', () => {
 		expect(moves.length).toBeGreaterThan(8);
 	});
 
-	test('does not include cardinal direction moves', () => {
+	test('does not include cardinal direction moves', () =>
+	{
 		const board = emptyBoard(8);
-		const moves = archbishopDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		const moves = archbishopDefinition.getValidMoves(
+			{
+				row: 4,
+				col: 4,
+			},
+			board,
+			'white',
+			8,
+			null,
+		);
 		const cardinalMoves = moves.filter((m) => (m.row === 4 && m.col !== 4) || (m.col === 4 && m.row !== 4));
 		expect(cardinalMoves.length).toBe(0);
 	});
 
-	test('blocked by friendly piece on diagonal but knight can jump', () => {
+	test('blocked by friendly piece on diagonal but knight can jump', () =>
+	{
 		let board = emptyBoard(8);
-		board = placePiece(board, 3, 3, {type: 'pawn', color: 'white', hasMoved: false});
-		const moves = archbishopDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		board = placePiece(
+			board,
+			3,
+			3,
+			{
+				type: 'pawn',
+				color: 'white',
+				hasMoved: false,
+			},
+		);
+		const moves = archbishopDefinition.getValidMoves(
+			{
+				row: 4,
+				col: 4,
+			},
+			board,
+			'white',
+			8,
+			null,
+		);
 		const blockedDiagonal = moves.find((m) => m.row === 2 && m.col === 2);
 		expect(blockedDiagonal).toBeUndefined();
 
@@ -46,18 +88,47 @@ describe('archbishop movement', () => {
 		expect(knightJump).toBeDefined();
 	});
 
-	test('no duplicate squares in combined moves', () => {
+	test('no duplicate squares in combined moves', () =>
+	{
 		const board = emptyBoard(8);
-		const moves = archbishopDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		const moves = archbishopDefinition.getValidMoves(
+			{
+				row: 4,
+				col: 4,
+			},
+			board,
+			'white',
+			8,
+			null,
+		);
 		const keys = moves.map((m) => `${m.row},${m.col}`);
 		const uniqueKeys = new Set(keys);
 		expect(uniqueKeys.size).toBe(keys.length);
 	});
 
-	test('deduplication works when knight and bishop targets overlap', () => {
+	test('deduplication works when knight and bishop targets overlap', () =>
+	{
 		let board = emptyBoard(8);
-		board = placePiece(board, 2, 2, {type: 'pawn', color: 'black', hasMoved: false});
-		const moves = archbishopDefinition.getValidMoves({row: 4, col: 4}, board, 'white', 8, null);
+		board = placePiece(
+			board,
+			2,
+			2,
+			{
+				type: 'pawn',
+				color: 'black',
+				hasMoved: false,
+			},
+		);
+		const moves = archbishopDefinition.getValidMoves(
+			{
+				row: 4,
+				col: 4,
+			},
+			board,
+			'white',
+			8,
+			null,
+		);
 		const at22 = moves.filter((m) => m.row === 2 && m.col === 2);
 		expect(at22.length).toBe(1);
 	});

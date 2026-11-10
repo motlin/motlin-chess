@@ -3,7 +3,8 @@ import {ThemeProvider} from './theme/ThemeProvider.js';
 import {Game} from './components/Game.js';
 import './App.css';
 
-export function App(): React.JSX.Element {
+export function App(): React.JSX.Element
+{
 	return (
 		<ThemeProvider>
 			<GameProvider>

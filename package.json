@@ -3,14 +3,15 @@
 	"version": "0.0.0",
 	"description": "Motlin Chess — customizable chess with extra pieces",
 	"type": "module",
-	"scripts": {
+	"scripts":
+	{
 		"dev": "vp dev",
 		"preview": "vp preview",
 		"build": "tsgo && vp build",
 		"oxlint": "vp lint . --fix",
 		"oxlint:ci": "vp lint . --format github",
-		"fmt": "vp fmt",
-		"fmt:ci": "vp fmt --check",
+		"fmt": "oxfmt-next-line",
+		"fmt:ci": "oxfmt-next-line --check",
 		"typecheck": "tsgo --noEmit",
 		"test": "NODE_OPTIONS=--no-experimental-webstorage node node_modules/vitest/dist/cli.js",
 		"test:ui": "NODE_OPTIONS=--no-experimental-webstorage node node_modules/vitest/dist/cli.js --ui",
@@ -20,11 +21,13 @@
 		"test-storybook": "npx concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server storybook-static --port 6006 --silent\" \"npx wait-on tcp:127.0.0.1:6006 && test-storybook\"",
 		"prepare": "VITE_GIT_HOOKS=0 vp config"
 	},
-	"dependencies": {
+	"dependencies":
+	{
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7"
 	},
-	"devDependencies": {
+	"devDependencies":
+	{
 		"@chromatic-com/storybook": "^5.2.1",
 		"@sentry/vite-plugin": "^5.3.0",
 		"@storybook/addon-a11y": "^10.4.6",
