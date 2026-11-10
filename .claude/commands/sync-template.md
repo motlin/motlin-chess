@@ -171,7 +171,7 @@ Migrate project to Vite+ using vp migrate
   Prerequisite: vite-plus must be in .mise/config.toml
   Run: vp migrate
   This replaces biome/eslint/prettier with oxlint/oxfmt
-  After migration: delete biome.json if present (replaced by vp lint / vp fmt)
+  After migration: delete biome.json if present (replaced by vp lint / oxfmt-next-line)
   After migration: run vp check --fix to verify linting/formatting works
   Source: ~/projects/typescript-template
 ```
@@ -208,7 +208,7 @@ Simplify GitHub Actions CI to use mise-only setup
 ```
 Update justfile to use vp commands
   Change pnpm install → vp install
-  Add check/lint/format recipes using vp check/lint/fmt
+  Add check/lint recipes using vp check/lint and a format recipe using oxfmt-next-line
   Add CI env detection: ci := env("CI", "")
   Prerequisite: vite-plus migration must be done first
   Source: ~/projects/typescript-template/justfile
